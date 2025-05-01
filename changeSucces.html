@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mot de passe changé avec succès</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .success-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .success-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #00B8A9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+        }
+        
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .success-message {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+        
+        .submit-btn {
+            background-color: #00B8A9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .submit-btn:hover {
+            background-color: #00a296;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 20px;
+            }
+            
+            .success-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .success-icon svg {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .success-message {
+                font-size: 16px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        
+        <h1 class="success-message">Mot de passe changé avec succès !</h1>
+        
+        <a href="login.html" class="submit-btn">Suivant</a>
+    </div>
+</body>
+</html>
