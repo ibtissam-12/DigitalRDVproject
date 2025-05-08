@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prendre un rendez-vous</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00BFA5;
+            margin-bottom: 30px;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .domain-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .domain-card:hover {
+            background-color: #e9f7f6;
+            border-color: #00BFA5;
+        }
+        .domain-card.selected {
+            background-color: #e0f2f1;
+            border-color: #00BFA5;
+            font-weight: bold;
+        }
+        .doctor-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .doctor-card:hover {
+            background-color: #e9f7f6;
+            border-color: #00BFA5;
+        }
+        .doctor-card.selected {
+            background-color: #e0f2f1;
+            border-color: #00BFA5;
+        }
+        .doctor-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .doctor-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .doctor-info {
+            flex-grow: 1;
+        }
+        .doctor-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .calendar {
+            margin-top: 20px;
+        }
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .month-title {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #00BFA5;
+        }
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .day {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .day:hover:not(.disabled) {
+            background-color: #e0f2f1;
+        }
+        .day.selected {
+            background-color: #00BFA5;
+            color: white;
+        }
+        .day.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .time-slot {
+            text-align: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .time-slot:hover {
+            background-color: #e9f7f6;
+            border-color: #00BFA5;
+        }
+        .time-slot.selected {
+            background-color: #00BFA5;
+            color: white;
+            border-color: #00BFA5;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .next-btn {
+            background-color: #00BFA5;
+            color: white;
+        }
+        .next-btn:hover {
+            background-color: #00a896;
+        }
+        .back-btn {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        .back-btn:hover {
+            background-color: #e5e5e5;
+        }
+        .hidden {
+            display: none;
+        }
+        .confirmation {
+            text-align: center;
+            line-height: 1.6;
+        }
+        .confirmation-details {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prendre un rendez-vous</h1>
+        
+        <!-- Étape 1: Sélection du domaine médical -->
+        <div class="step active" id="step1">
+            <h2>Choisissez une spécialité médicale</h2>
+            <div class="domain-grid">
+                <div class="domain-card" onclick="selectDomain(this, 'Neurologie')">
+                    <h3>Neurologie</h3>
+                </div>
+                <div class="domain-card" onclick="selectDomain(this, 'Dermatologie')">
+                    <h3>Dermatologie</h3>
+                </div>
+                <div class="domain-card" onclick="selectDomain(this, 'Gynécologie')">
+                    <h3>Gynécologie</h3>
+                </div>
+                <div class="domain-card" onclick="selectDomain(this, 'Cardiologie')">
+                    <h3>Cardiologie</h3>
+                </div>
+                <div class="domain-card" onclick="selectDomain(this, 'Ophtalmologie')">
+                    <h3>Ophtalmologie</h3>
+                </div>
+                <div class="domain-card" onclick="selectDomain(this, 'Pédiatrie')">
+                    <h3>Pédiatrie</h3>
+                </div>
+            </div>
+            <div class="buttons">
+                <div></div> <!-- Placeholder pour l'alignement -->
+                <button class="next-btn" onclick="nextStep()" id="domain-next" disabled>Suivant</button>
+            </div>
+        </div>
+        
+        <!-- Étape 2: Sélection du médecin -->
+        <div class="step" id="step2">
+            <h2>Choisissez un médecin</h2>
+            <div id="doctors-list">
+                <!-- Les médecins seront ajoutés dynamiquement ici -->
+            </div>
+            <div class="buttons">
+                <button class="back-btn" onclick="prevStep()">Retour</button>
+                <button class="next-btn" onclick="nextStep()" id="doctor-next" disabled>Suivant</button>
+            </div>
+        </div>
+        
+        <!-- Étape 3: Sélection de la date -->
+        <div class="step" id="step3">
+            <h2>Sélectionnez une date</h2>
+            <div class="calendar">
+                <div class="month-nav">
+                    <button class="nav-btn" onclick="prevMonth()">&lt;</button>
+                    <div class="month-title" id="month-year">Mai 2025</div>
+                    <button class="nav-btn" onclick="nextMonth()">&gt;</button>
+                </div>
+                <div class="weekdays">
+                    <div>L</div>
+                    <div>M</div>
+                    <div>M</div>
+                    <div>J</div>
+                    <div>V</div>
+                    <div>S</div>
+                    <div>D</div>
+                </div>
+                <div class="days" id="days-grid">
+                    <!-- Les jours seront ajoutés dynamiquement ici -->
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="back-btn" onclick="prevStep()">Retour</button>
+                <button class="next-btn" onclick="nextStep()" id="date-next" disabled>Suivant</button>
+            </div>
+        </div>
+        
+        <!-- Étape 4: Sélection de l'heure -->
+        <div class="step" id="step4">
+            <h2>Choisissez un horaire</h2>
+            <div class="time-slots" id="time-slots">
+                <div class="time-slot" onclick="selectTimeSlot(this)">09:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">09:30</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">10:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">10:30</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">11:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">11:30</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">14:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">14:30</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">15:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">15:30</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">16:00</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">16:30</div>
+            </div>
+            <div class="buttons">
+                <button class="back-btn" onclick="prevStep()">Retour</button>
+                <button class="next-btn" onclick="nextStep()" id="time-next" disabled>Confirmer</button>
+            </div>
+        </div>
+        
+        <!-- Étape 5: Confirmation -->
+        <div class="step" id="step5">
+            <h2>Confirmation du rendez-vous</h2>
+            <div class="confirmation">
+                <p>Votre rendez-vous a été programmé avec succès!</p>
+                <div class="confirmation-details">
+                    <p><strong>Spécialité:</strong> <span id="confirm-domain"></span></p>
+                    <p><strong>Médecin:</strong> <span id="confirm-doctor"></span></p>
+                    <p><strong>Date:</strong> <span id="confirm-date"></span></p>
+                    <p><strong>Heure:</strong> <span id="confirm-time"></span></p>
+                </div>
+                <p>Un e-mail de confirmation vous a été envoyé.</p>
+            </div>
+            <div class="buttons">
+                <button class="back-btn" onclick="resetForm()">Nouveau rendez-vous</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales pour stocker les sélections
+        let selectedDomain = '';
+        let selectedDoctor = '';
+        let selectedDate = '';
+        let selectedTime = '';
+        let currentStep = 1;
+        let currentDate = new Date();
+        
+        // Données des médecins (à remplacer par une vraie base de données)
+        const doctors = {
+            'Neurologie': [
+                { id: 1, name: 'Dr. Martin Dubois', speciality: 'Neurologue', experience: '15 ans d\'expérience', image: 'images/doctors/doctor1.jpg' },
+                { id: 2, name: 'Dr. Sophie Laurent', speciality: 'Neurologue', experience: '8 ans d\'expérience', image: 'images/doctors/doctor2.jpg' }
+            ],
+            'Dermatologie': [
+                { id: 3, name: 'Dr. Thomas Moreau', speciality: 'Dermatologue', experience: '12 ans d\'expérience', image: 'images/doctors/doctor3.jpg' },
+                { id: 4, name: 'Dr. Julie Bernard', speciality: 'Dermatologue', experience: '9 ans d\'expérience', image: 'images/doctors/doctor4.jpg' }
+            ],
+            'Gynécologie': [
+                { id: 5, name: 'Dr. Claire Petit', speciality: 'Gynécologue', experience: '20 ans d\'expérience', image: 'images/doctors/doctor5.jpg' },
+                { id: 6, name: 'Dr. Philippe Robert', speciality: 'Gynécologue', experience: '14 ans d\'expérience', image: 'images/doctors/doctor6.jpg' }
+            ],
+            'Cardiologie': [
+                { id: 7, name: 'Dr. Antoine Richard', speciality: 'Cardiologue', experience: '18 ans d\'expérience', image: 'images/doctors/doctor7.jpg' },
+                { id: 8, name: 'Dr. Marie Lambert', speciality: 'Cardiologue', experience: '11 ans d\'expérience', image: 'images/doctors/doctor8.jpg' }
+            ],
+            'Ophtalmologie': [
+                { id: 9, name: 'Dr. François Leroy', speciality: 'Ophtalmologue', experience: '16 ans d\'expérience', image: 'images/doctors/doctor9.jpg' },
+                { id: 10, name: 'Dr. Émilie Dupont', speciality: 'Ophtalmologue', experience: '7 ans d\'expérience', image: 'images/doctors/doctor10.jpg' }
+            ],
+            'Pédiatrie': [
+                { id: 11, name: 'Dr. Nathalie Simon', speciality: 'Pédiatre', experience: '19 ans d\'expérience', image: 'images/doctors/doctor11.jpg' },
+                { id: 12, name: 'Dr. Pierre Durand', speciality: 'Pédiatre', experience: '10 ans d\'expérience', image: 'images/doctors/doctor12.jpg' }
+            ]
+        };
+        
+        // Fonction pour sélectionner un domaine
+        function selectDomain(element, domain) {
+            // Enlever la classe 'selected' de tous les éléments
+            const domainCards = document.querySelectorAll('.domain-card');
+            domainCards.forEach(card => card.classList.remove('selected'));
+            
+            // Ajouter la classe 'selected' à l'élément cliqué
+            element.classList.add('selected');
+            
+            // Stocker le domaine sélectionné
+            selectedDomain = domain;
+            
+            // Activer le bouton suivant
+            document.getElementById('domain-next').disabled = false;
+        }
+        
+        // Fonction pour générer la liste des médecins
+        function generateDoctorsList() {
+            const doctorsList = document.getElementById('doctors-list');
+            doctorsList.innerHTML = '';
+            
+            if (doctors[selectedDomain]) {
+                doctors[selectedDomain].forEach(doctor => {
+                    const doctorCard = document.createElement('div');
+                    doctorCard.className = 'doctor-card';
+                    doctorCard.onclick = function() { selectDoctor(this, doctor.name); };
+                    
+                    doctorCard.innerHTML = `
+                        <div class="doctor-img">
+                            <img src="${doctor.image}" alt="${doctor.name}">
+                        </div>
+                        <div class="doctor-info">
+                            <div class="doctor-name">${doctor.name}</div>
+                            <div>${doctor.speciality}</div>
+                            <div>${doctor.experience}</div>
+                        </div>
+                    `;
+                    
+                    doctorsList.appendChild(doctorCard);
+                });
+            }
+        }
+        
+        // Fonction pour sélectionner un médecin
+        function selectDoctor(element, doctor) {
+            // Enlever la classe 'selected' de tous les éléments
+            const doctorCards = document.querySelectorAll('.doctor-card');
+            doctorCards.forEach(card => card.classList.remove('selected'));
+            
+            // Ajouter la classe 'selected' à l'élément cliqué
+            element.classList.add('selected');
+            
+            // Stocker le médecin sélectionné
+            selectedDoctor = doctor;
+            
+            // Activer le bouton suivant
+            document.getElementById('doctor-next').disabled = false;
+        }
+        
+        // Fonction pour générer le calendrier
+        function generateCalendar() {
+            const daysGrid = document.getElementById('days-grid');
+            daysGrid.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Mettre à jour le titre du mois
+            document.getElementById('month-year').textContent = new Date(year, month, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            
+            // Déterminer le premier jour du mois (0 = dimanche, 1 = lundi, etc.)
+            let firstDayOfMonth = new Date(year, month, 1).getDay();
+            if (firstDayOfMonth === 0) firstDayOfMonth = 7; // Convertir dimanche (0) en 7 pour l'adapter à notre grille qui commence par lundi
+            
+            // Déterminer le nombre de jours dans le mois
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Ajouter des cellules vides pour les jours avant le premier jour du mois
+            for (let i = 1; i < firstDayOfMonth; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day disabled';
+                daysGrid.appendChild(emptyDay);
+            }
+            
+            // Ajouter les jours du mois
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.textContent = day;
+                
+                // Vérifier si le jour est dans le passé
+                const checkDate = new Date(year, month, day);
+                if (checkDate < today) {
+                    dayElement.classList.add('disabled');
+                } else {
+                    dayElement.onclick = function() { selectDate(this, day); };
+                }
+                
+                daysGrid.appendChild(dayElement);
+            }
+        }
+        
+        // Fonction pour changer de mois
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar();
+        }
+        
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar();
+        }
+        
+        // Fonction pour sélectionner une date
+        function selectDate(element, day) {
+            // Enlever la classe 'selected' de tous les éléments
+            const dayElements = document.querySelectorAll('.day');
+            dayElements.forEach(dayEl => dayEl.classList.remove('selected'));
+            
+            // Ajouter la classe 'selected' à l'élément cliqué
+            element.classList.add('selected');
+            
+            // Stocker la date sélectionnée
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            selectedDate = new Date(year, month, day).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            // Activer le bouton suivant
+            document.getElementById('date-next').disabled = false;
+        }
+        
+        // Fonction pour sélectionner un horaire
+        function selectTimeSlot(element) {
+            // Enlever la classe 'selected' de tous les éléments
+            const timeSlots = document.querySelectorAll('.time-slot');
+            timeSlots.forEach(slot => slot.classList.remove('selected'));
+            
+            // Ajouter la classe 'selected' à l'élément cliqué
+            element.classList.add('selected');
+            
+            // Stocker l'horaire sélectionné
+            selectedTime = element.textContent;
+            
+            // Activer le bouton suivant
+            document.getElementById('time-next').disabled = false;
+        }
+        
+        // Fonction pour passer à l'étape suivante
+        function nextStep() {
+            // Cacher l'étape actuelle
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            
+            // Passer à l'étape suivante
+            currentStep++;
+            
+            // Afficher la nouvelle étape
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Actions spécifiques à chaque étape
+            if (currentStep === 2) {
+                generateDoctorsList();
+            } else if (currentStep === 3) {
+                generateCalendar();
+            } else if (currentStep === 5) {
+                // Remplir les détails de confirmation
+                document.getElementById('confirm-domain').textContent = selectedDomain;
+                document.getElementById('confirm-doctor').textContent = selectedDoctor;
+                document.getElementById('confirm-date').textContent = selectedDate;
+                document.getElementById('confirm-time').textContent = selectedTime;
+            }
+        }
+        
+        // Fonction pour revenir à l'étape précédente
+        function prevStep() {
+            // Cacher l'étape actuelle
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            
+            // Revenir à l'étape précédente
+            currentStep--;
+            
+            // Afficher la nouvelle étape
+            document.getElementById(`step${currentStep}`).classList.add('active');
+        }
+        
+        // Fonction pour réinitialiser le formulaire
+        function resetForm() {
+            selectedDomain = '';
+            selectedDoctor = '';
+            selectedDate = '';
+            selectedTime = '';
+            
+            // Cacher l'étape actuelle
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            
+            // Revenir à la première étape
+            currentStep = 1;
+            
+            // Afficher la première étape
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            
+            // Réinitialiser les sélections
+            document.querySelectorAll('.domain-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('domain-next').disabled = true;
+        }
+        
+        // Initialiser le calendrier au chargement
+        window.onload = function() {
+            generateCalendar();
+        };
+    </script>
+</body>
+</html>

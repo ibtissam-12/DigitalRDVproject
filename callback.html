@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Callback</title>
+</head>
+<body>
+    <h1>Processing authentication...</h1>
+    <script>
+        // This will handle the token from Google
+        function handleCredentialResponse(response) {
+            // You can store the token, redirect, or make API calls here
+            console.log("Received authentication response:", response);
+            
+            // Example: Store token in localStorage
+            localStorage.setItem('google_token', response.credential);
+            
+            // Redirect back to main page
+            window.location.href = 'accueil.html';
+        }
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>
