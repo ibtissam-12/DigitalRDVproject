@@ -126,39 +126,42 @@
     <div class="form-container">
         <h1 class="form-title">INSCRIPTION</h1>
         
-        <form id="registration-form">
+        <form id="registration-form" action="inscription.php" method="POST">
             <div class="form-group">
                 <label for="nom" class="form-label">NOM</label>
-                <input type="text" id="nom" class="form-input" placeholder="Entrez votre nom" required>
+                <input type="text" id="nom" name="nom" class="form-input" placeholder="Entrez votre nom" required>
                 <span class="error-message" id="nom-error">Veuillez entrer votre nom</span>
             </div>
-            
             <div class="form-group">
                 <label for="prenom" class="form-label">PRÉNOM</label>
-                <input type="text" id="prenom" class="form-input" placeholder="Entrez votre prénom" required>
+                <input type="text" id="prenom" name="prenom" class="form-input" placeholder="Entrez votre prénom" required>
                 <span class="error-message" id="prenom-error">Veuillez entrer votre prénom</span>
             </div>
-            
             <div class="form-group">
                 <label for="email" class="form-label">EMAIL</label>
-                <input type="email" id="email" class="form-input" placeholder="Entrez votre Email" required>
+                <input type="email" id="email" name="email" class="form-input" placeholder="Entrez votre Email" required>
                 <span class="error-message" id="email-error">Veuillez entrer une adresse email valide</span>
             </div>
-            
             <div class="form-group">
                 <label for="password" class="form-label">MOT DE PASSE</label>
-                <input type="password" id="password" class="form-input" placeholder="Entrez votre mot de passe" required>
+                <input type="password" id="password" name="mot_de_passe" class="form-input" placeholder="Entrez votre mot de passe" required>
                 <span class="error-message" id="password-error">Le mot de passe doit contenir au moins 8 caractères</span>
             </div>
-            
             <div class="form-group">
                 <label for="confirm-password" class="form-label">CONFIRMER MOT DE PASSE</label>
-                <input type="password" id="confirm-password" class="form-input" placeholder="Confirmez votre mot de passe" required>
+                <input type="password" id="confirm-password" name="confirmer" class="form-input" placeholder="Confirmez votre mot de passe" required>
                 <span class="error-message" id="confirm-password-error">Les mots de passe ne correspondent pas</span>
             </div>
-            
+            <div class="form-group">
+                <label for="role" class="form-label">RÔLE</label>
+                <select id="role" name="role" class="form-input" required>
+                    <option value="patient">Patient</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
             <button type="submit" class="submit-btn">S'INSCRIRE</button>
         </form>
+        
     </div>
 
     <script>
