@@ -10,29 +10,36 @@ class User {
     }
 
     public function inscrire($nom, $prenom, $email, $mot_de_passe, $role) {
+        // Vérification si l'email existe déjà
+        $checkEmail = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = :email");
+        $checkEmail->execute([':email' => $email]);
+        if ($checkEmail->rowCount() > 0) {
+            echo "Cet email est déjà utilisé.";
+            return false; // Retourner false si l'email existe déjà
+        }
+
+        // Hash du mot de passe
         $mot_de_passe_hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (nom, prenom, email, mot_de_passe, role)
+
+        // Insertion des données dans la base
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role) 
                 VALUES (:nom, :prenom, :email, :mot_de_passe, :role)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
+
+        // Exécution de la requête d'insertion
+        if ($stmt->execute([
             ':nom' => $nom,
             ':prenom' => $prenom,
             ':email' => $email,
             ':mot_de_passe' => $mot_de_passe_hash,
             ':role' => $role
-        ]);
-    }
-
-    public function connecter($email, $mot_de_passe) {
-        $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([':email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-            return $user; // connexion réussie
+        ])) {
+            return true; // Inscription réussie
+        } else {
+            echo "Erreur lors de l'insertion : " . implode(", ", $stmt->errorInfo());
+            return false; // Retourner false en cas d'erreur
         }
-        return false; // échec
     }
 }
+
 ?>
