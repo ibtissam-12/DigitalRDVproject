@@ -1,27 +1,24 @@
+
 <?php
-class Database {
-    private $host = "localhost";
-    private $db_name = "digitalrdv";
-    private $username = "root";
-    private $password = "";
-    private $conn;
+// Paramètres de connexion à la base de données
+$host = "localhost";
+$db_name = "digitalrdv";
+$username = "root";
+$password = "";
 
-    public function getConnection() {
-        $this->conn = null;
+try {
+    // Tentative de connexion à la base de données avec PDO
+    $conn = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
 
-        try {
-            // Connexion PDO avec gestion des erreurs
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, 
-                                  $this->username, 
-                                  $this->password);
-            $this->conn->exec("set names utf8");
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Active le mode exception pour gérer les erreurs PDO
-        } catch (PDOException $exception) {
-            echo "Erreur de connexion : " . $exception->getMessage(); // Affiche l'erreur détaillée si une exception se produit
-        }
+    // Configuration de l'attribut pour afficher les erreurs
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        return $this->conn;
-    }
+    // Si la connexion est réussie, afficher un message
+    echo "Connexion réussie à la base de données $db_name !";
+
+} catch (PDOException $exception) {
+    // Si une erreur se produit, afficher l'erreur
+    echo "Erreur de connexion : " . $exception->getMessage();
 }
-
 ?>
+
