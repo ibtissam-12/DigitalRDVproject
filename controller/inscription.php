@@ -1,4 +1,5 @@
 <?php
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -8,6 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = htmlspecialchars(trim($_POST['nom']));
     $prenom = htmlspecialchars(trim($_POST['prenom']));
     $email = htmlspecialchars(trim($_POST['email']));
+=======
+require_once '../model/User.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
+    $email = $_POST['email'];
+
     $mot_de_passe = $_POST['mot_de_passe'];
     $confirmer = $_POST['confirmer'];
     $role = $_POST['role'];
@@ -17,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
+<<<<<<< HEAD
     if (strlen($mot_de_passe) < 8) {
         echo "Le mot de passe doit contenir au moins 8 caractères.";
         exit;
@@ -38,3 +48,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 
+=======
+    // Vérifie la force du mot de passe ici si nécessaire...
+
+    $user = new User();
+    if ($user->inscrire($nom, $prenom, $email, $mot_de_passe, $role)) {
+        echo "Inscription réussie !";
+    } else {
+        echo "Erreur lors de l'inscription.";
+    }
+}
+?>
+>>>>>>> 0500448f5a313fc5e1648f553761c447e4e31a80

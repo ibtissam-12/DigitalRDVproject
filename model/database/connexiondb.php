@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 <?php
 // Paramètres de connexion à la base de données
@@ -22,3 +23,30 @@ try {
 }
 ?>
 
+=======
+<?php
+class Database {
+    private $host = "localhost";
+    private $db_name = "digitalrdv";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function getConnection() {
+        $this->conn = null;
+
+        try {
+            // Connexion PDO
+            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, 
+                                  $this->username, 
+                                  $this->password);
+            $this->conn->exec("set names utf8");
+        } catch (PDOException $exception) {
+            echo "Erreur de connexion : " . $exception->getMessage();
+        }
+
+        return $this->conn;
+    }
+}
+?>
+>>>>>>> 0500448f5a313fc5e1648f553761c447e4e31a80
