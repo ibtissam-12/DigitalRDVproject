@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalRDV - Connexion</title>
+    <link rel="icon" href="images/logo.png" type="image/gif" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -94,13 +97,21 @@
         .logo img {
             height: 60px;
         }
+        .google-btn img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .text-end {
+            text-align: end;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="login-container">
             <div class="login-image">
-                <!-- You can place your medical illustration here -->
+                <!-- Illustration médicale ici -->
             </div>
             <div class="login-form">
                 <div class="logo">
@@ -120,14 +131,15 @@
                         <label for="password">Mot de passe</label>
                         <input type="password" id="password" required>
                     </div>
+                    <div class="text-end">
+                        <a href="passwordReset.html" class="text-danger text-decoration-none">Mot de passe oublié ?</a>
+                    </div>
                     <button type="submit">Se connecter</button>
-                    <p><a href="#">Mot de passe oublié?</a></p>
-                    <p id="register-link">Pas encore de compte? <a href="#">S'inscrire</a></p>
+                    <p id="register-link" class="mt-3">Pas encore de compte? <a href="inscription.html">S'inscrire</a></p>
                 </form>
             </div>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const patientToggle = document.getElementById('patient-toggle');
@@ -145,28 +157,29 @@
             doctorToggle.addEventListener('click', function() {
                 doctorToggle.classList.add('active');
                 patientToggle.classList.remove('active');
-                registerLink.style.display = 'none'; // Doctors typically don't self-register
+                registerLink.style.display = 'none'; // Les médecins ne s'inscrivent pas eux-mêmes
             });
             
             // Form submission
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const isDoctor = doctorToggle.classList.contains('active');
                 
-                // Here you would normally send this data to your server
-                // For demonstration, we'll just redirect based on user type
+                if (email === "" || password === "") {
+                    alert("Veuillez remplir tous les champs.");
+                    return false;
+                }
+                // Redirection selon le type d'utilisateur
                 if (isDoctor) {
-                    // Redirect to doctor dashboard
                     window.location.href = 'doctor-dashboard.html';
                 } else {
-                    // Redirect to patient dashboard
                     window.location.href = 'patient-dashboard.html';
                 }
             });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
