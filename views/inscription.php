@@ -217,7 +217,7 @@
                 console.log('Form is valid, submitting...');
                 // Here you would typically send the form data to your server
                 // You can replace this with your actual form submission code
-                window.location.href = "accueil.html";
+                window.location.href = "accueil.php";
                 alert('Inscription réussie!');
                 this.reset();
             }

@@ -376,7 +376,7 @@
           <!-- Liens à gauche -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link ml-4" href="accueil.html">Accueil</a>
+              <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
               <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
@@ -389,7 +389,7 @@
           <!-- Lien à droite -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link font-weight-bold login-btn" href="login.html">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
+              <a class="nav-link font-weight-bold login-btn" href="login.php">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
             </li>
           </ul>
     
