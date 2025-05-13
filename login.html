@@ -3,149 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page de Connexion</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>DigitalRDV - Connexion</title>
     <style>
         body {
-            background: #f5f5f5;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
         .login-container {
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-        }
-        .form-control {
+            display: flex;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            padding-left: 40px;
+            overflow: hidden;
+            width: 800px;
+            background-color: white;
         }
-        .input-group-text {
-            border-radius: 10px 0 0 10px;
-            background: white;
+        .login-image {
+            flex: 1;
+            background-image: url('medical-illustration.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .btn {
-            border-radius: 10px;
-            transition: all 0.3s;
+        .login-form {
+            flex: 1;
+            padding: 40px;
         }
-        .btn:hover {
-            transform: scale(1.05);
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 30px;
         }
-        .toggle-password {
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .toggle-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+        .toggle-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            height: 60px;
         }
     </style>
 </head>
 <body>
-    <div class="login-container text-center">
-        <h2 class="text-success">CONNEXION</h2>
-        <form onsubmit="return handleLogin(event)">
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                <input type="email" id="email" class="form-control" placeholder="Entrez votre Email" required>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-image">
+                <!-- You can place your medical illustration here -->
             </div>
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" id="password" class="form-control" placeholder="Entrez votre mot de passe" required>
-                <span class="input-group-text toggle-password" onclick="togglePassword()">
-                    <i class="bi bi-eye"></i>
-                </span>
+            <div class="login-form">
+                <div class="logo">
+                    <img src="logo.png" alt="DigitalRDV Logo">
+                    <h1>DigitalRDV</h1>
+                </div>
+                <div class="toggle-container">
+                    <div class="toggle-btn active" id="patient-toggle">Patient</div>
+                    <div class="toggle-btn" id="doctor-toggle">Médecin</div>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit">Se connecter</button>
+                    <p><a href="#">Mot de passe oublié?</a></p>
+                    <p id="register-link">Pas encore de compte? <a href="#">S'inscrire</a></p>
+                </form>
             </div>
-            <div class="text-end">
-                <a href="passwordReset.html" class="text-danger text-decoration-none">Mot de passe oublié ?</a>
-            </div>
-            <button type="submit" class="btn btn-success w-100 mt-3">SE CONNECTER</button>
-        </form>
-
-        <div class="d-flex align-items-center my-3">
-            <hr class="flex-grow-1"> <span class="mx-2">OU</span> <hr class="flex-grow-1">
-        </div>
-
-        <!-- ✅ Bouton Google bien positionné ici -->
-        <div id="g_id_onload"
-             data-client_id="679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com"
-             data-login_uri="http://127.0.0.1:5500/callback.html"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="outline"
-             data-text="se connecter avec Google"
-             data-size="large"
-             data-logo_alignment="left">
         </div>
     </div>
 
     <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            if (email === "" || password === "") {
-                alert("Veuillez remplir tous les champs.");
-                return false;
-            }
-
-            alert("Connexion réussie!");
-            window.location.href = "accueil.html";
-            return true;
-        }
-
-        function togglePassword() {
-            const passwordField = document.getElementById("password");
-            const toggleIcon = document.querySelector(".toggle-password i");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                toggleIcon.classList.remove("bi-eye");
-                toggleIcon.classList.add("bi-eye-slash");
-            } else {
-                passwordField.type = "password";
-                toggleIcon.classList.remove("bi-eye-slash");
-                toggleIcon.classList.add("bi-eye");
-            }
-        }
-
-        function handleCredentialResponse(response) {
-            console.log("Google ID Token :", response.credential);
-            alert("Connexion Google réussie !");
-            // Rediriger ou envoyer le token à ton backend ici
-        }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-<script>
-    window.onload = function() {
-        google.accounts.id.initialize({
-            client_id: "679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com",
-            callback: handleCredentialResponse
+        document.addEventListener('DOMContentLoaded', function() {
+            const patientToggle = document.getElementById('patient-toggle');
+            const doctorToggle = document.getElementById('doctor-toggle');
+            const registerLink = document.getElementById('register-link');
+            const loginForm = document.getElementById('login-form');
+            
+            // Toggle between patient and doctor login
+            patientToggle.addEventListener('click', function() {
+                patientToggle.classList.add('active');
+                doctorToggle.classList.remove('active');
+                registerLink.style.display = 'block';
+            });
+            
+            doctorToggle.addEventListener('click', function() {
+                doctorToggle.classList.add('active');
+                patientToggle.classList.remove('active');
+                registerLink.style.display = 'none'; // Doctors typically don't self-register
+            });
+            
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const isDoctor = doctorToggle.classList.contains('active');
+                
+                // Here you would normally send this data to your server
+                // For demonstration, we'll just redirect based on user type
+                if (isDoctor) {
+                    // Redirect to doctor dashboard
+                    window.location.href = 'doctor-dashboard.html';
+                } else {
+                    // Redirect to patient dashboard
+                    window.location.href = 'patient-dashboard.html';
+                }
+            });
         });
-        google.accounts.id.renderButton(
-            document.querySelector(".g_id_signin"), {
-                theme: "outline",
-                size: "large",
-                shape: "rectangular",
-                text: "signin_with",  // Texte sur le bouton (option standard de Google)
-                logo_alignment: "left"
-            }
-        );
-    };
-
-    function handleCredentialResponse(response) {
-        console.log("Google ID Token:", response.credential);
-        alert("Connexion Google réussie!");
-        // Traite ici le token Google ou redirige l'utilisateur
-    }
-</script>
-
+    </script>
+</body>
 </html>
