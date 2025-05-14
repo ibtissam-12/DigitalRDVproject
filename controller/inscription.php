@@ -1,27 +1,33 @@
 <?php
-session_start();
-require_once '../model/user.php';
+require_once __DIR__ . '/../model/user.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name = $_POST["name"] ?? '';
-    $email = $_POST["email"] ?? '';
-    $password = $_POST["password"] ?? '';
+class InscriptionController {
+    public function inscrireUtilisateur() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nom = $_POST['nom'];
+            $prenom = $_POST['prenom'];
+            $email = $_POST['email'];
+            $mdp = $_POST['mot_de_passe'];
+            $confirm = $_POST['confirmer'];
+            $role = $_POST['role'];
 
-    if (!empty($name) && !empty($email) && !empty($password)) {
-        $user = new User();
-        if ($user->register($name, $email, $password)) {
-            $_SESSION["success"] = "Inscription réussie !";
-            header("Location: ../views/registrationSucces.html");
-            exit();
-        } else {
-            $_SESSION["error"] = "Erreur : cet e-mail est déjà utilisé.";
+            if ($mdp !== $confirm) {
+                echo "Les mots de passe ne correspondent pas.";
+                return;
+            }
+
+            $user = new Utilisateur();
+            $success = $user->inscrire($nom, $prenom, $email, $mdp, $role);
+
+            if ($success) {
+                echo "Inscription réussie.";
+                header("Location: accueil.php");
+                exit;
+            } else {
+                echo "Erreur lors de l'inscription.";
+            }
         }
-    } else {
-        $_SESSION["error"] = "Tous les champs sont obligatoires.";
     }
-
-    header("Location: ../views/inscription.php");
-    exit();
 }
 ?>
 

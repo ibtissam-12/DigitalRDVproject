@@ -5,29 +5,29 @@ class User {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
-        $this->conn = $db->getConnection();
+        $this->conn = Database::getConnection();
     }
 
-    public function register($name, $email, $password) {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+    public function register($nom, $prenom, $email, $mot_de_passe) {
+        $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe) VALUES (?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$name, $email, $hash]);
+        return $stmt->execute([$nom, $prenom, $email, $hash]);
     }
 
-    public function login($email, $password) {
-        $sql = "SELECT * FROM users WHERE email = ?";
+    public function login($email, $mot_de_passe) {
+        $sql = "SELECT * FROM utilisateurs WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$email]);
-        $user = $stmt->fetch();
-        if ($user && password_verify($password, $user['password'])) {
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
             return $user;
         }
         return false;
     }
 }
 ?>
+
 
 
 

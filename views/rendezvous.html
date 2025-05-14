@@ -35,72 +35,6 @@
         .step.active {
             display: block;
         }
-        .domain-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .domain-card {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        .domain-card:hover {
-            background-color: #e9f7f6;
-            border-color: #00BFA5;
-        }
-        .domain-card.selected {
-            background-color: #e0f2f1;
-            border-color: #00BFA5;
-            font-weight: bold;
-        }
-        .doctor-card {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-        }
-        .doctor-card:hover {
-            background-color: #e9f7f6;
-            border-color: #00BFA5;
-        }
-        .doctor-card.selected {
-            background-color: #e0f2f1;
-            border-color: #00BFA5;
-        }
-        .doctor-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .doctor-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .doctor-info {
-            flex-grow: 1;
-        }
-        .doctor-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
         .calendar {
             margin-top: 20px;
         }
@@ -216,55 +150,52 @@
             margin: 20px 0;
             text-align: left;
         }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Prendre un rendez-vous</h1>
         
-        <!-- Étape 1: Sélection du domaine médical -->
+        <!-- Étape 1: Informations personnelles -->
         <div class="step active" id="step1">
-            <h2>Choisissez une spécialité médicale</h2>
-            <div class="domain-grid">
-                <div class="domain-card" onclick="selectDomain(this, 'Neurologie')">
-                    <h3>Neurologie</h3>
-                </div>
-                <div class="domain-card" onclick="selectDomain(this, 'Dermatologie')">
-                    <h3>Dermatologie</h3>
-                </div>
-                <div class="domain-card" onclick="selectDomain(this, 'Gynécologie')">
-                    <h3>Gynécologie</h3>
-                </div>
-                <div class="domain-card" onclick="selectDomain(this, 'Cardiologie')">
-                    <h3>Cardiologie</h3>
-                </div>
-                <div class="domain-card" onclick="selectDomain(this, 'Ophtalmologie')">
-                    <h3>Ophtalmologie</h3>
-                </div>
-                <div class="domain-card" onclick="selectDomain(this, 'Pédiatrie')">
-                    <h3>Pédiatrie</h3>
-                </div>
+            <h2>Vos informations</h2>
+            <div class="form-group">
+                <label for="name">Nom complet</label>
+                <input type="text" id="name" placeholder="Votre nom complet">
+            </div>
+            <div class="form-group">
+                <label for="email">Adresse email</label>
+                <input type="email" id="email" placeholder="Votre adresse email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Numéro de téléphone</label>
+                <input type="tel" id="phone" placeholder="Votre numéro de téléphone">
             </div>
             <div class="buttons">
                 <div></div> <!-- Placeholder pour l'alignement -->
-                <button class="next-btn" onclick="nextStep()" id="domain-next" disabled>Suivant</button>
+                <button class="next-btn" onclick="nextStep()" id="info-next">Suivant</button>
             </div>
         </div>
         
-        <!-- Étape 2: Sélection du médecin -->
+        <!-- Étape 2: Sélection de la date -->
         <div class="step" id="step2">
-            <h2>Choisissez un médecin</h2>
-            <div id="doctors-list">
-                <!-- Les médecins seront ajoutés dynamiquement ici -->
-            </div>
-            <div class="buttons">
-                <button class="back-btn" onclick="prevStep()">Retour</button>
-                <button class="next-btn" onclick="nextStep()" id="doctor-next" disabled>Suivant</button>
-            </div>
-        </div>
-        
-        <!-- Étape 3: Sélection de la date -->
-        <div class="step" id="step3">
             <h2>Sélectionnez une date</h2>
             <div class="calendar">
                 <div class="month-nav">
@@ -291,8 +222,8 @@
             </div>
         </div>
         
-        <!-- Étape 4: Sélection de l'heure -->
-        <div class="step" id="step4">
+        <!-- Étape 3: Sélection de l'heure -->
+        <div class="step" id="step3">
             <h2>Choisissez un horaire</h2>
             <div class="time-slots" id="time-slots">
                 <div class="time-slot" onclick="selectTimeSlot(this)">09:00</div>
@@ -314,14 +245,15 @@
             </div>
         </div>
         
-        <!-- Étape 5: Confirmation -->
-        <div class="step" id="step5">
+        <!-- Étape 4: Confirmation -->
+        <div class="step" id="step4">
             <h2>Confirmation du rendez-vous</h2>
             <div class="confirmation">
                 <p>Votre rendez-vous a été programmé avec succès!</p>
                 <div class="confirmation-details">
-                    <p><strong>Spécialité:</strong> <span id="confirm-domain"></span></p>
-                    <p><strong>Médecin:</strong> <span id="confirm-doctor"></span></p>
+                    <p><strong>Nom:</strong> <span id="confirm-name"></span></p>
+                    <p><strong>Email:</strong> <span id="confirm-email"></span></p>
+                    <p><strong>Téléphone:</strong> <span id="confirm-phone"></span></p>
                     <p><strong>Date:</strong> <span id="confirm-date"></span></p>
                     <p><strong>Heure:</strong> <span id="confirm-time"></span></p>
                 </div>
@@ -335,99 +267,10 @@
 
     <script>
         // Variables globales pour stocker les sélections
-        let selectedDomain = '';
-        let selectedDoctor = '';
         let selectedDate = '';
         let selectedTime = '';
         let currentStep = 1;
         let currentDate = new Date();
-        
-        // Données des médecins (à remplacer par une vraie base de données)
-        const doctors = {
-            'Neurologie': [
-                { id: 1, name: 'Dr. Martin Dubois', speciality: 'Neurologue', experience: '15 ans d\'expérience', image: 'images/doctors/doctor1.jpg' },
-                { id: 2, name: 'Dr. Sophie Laurent', speciality: 'Neurologue', experience: '8 ans d\'expérience', image: 'images/doctors/doctor2.jpg' }
-            ],
-            'Dermatologie': [
-                { id: 3, name: 'Dr. Thomas Moreau', speciality: 'Dermatologue', experience: '12 ans d\'expérience', image: 'images/doctors/doctor3.jpg' },
-                { id: 4, name: 'Dr. Julie Bernard', speciality: 'Dermatologue', experience: '9 ans d\'expérience', image: 'images/doctors/doctor4.jpg' }
-            ],
-            'Gynécologie': [
-                { id: 5, name: 'Dr. Claire Petit', speciality: 'Gynécologue', experience: '20 ans d\'expérience', image: 'images/doctors/doctor5.jpg' },
-                { id: 6, name: 'Dr. Philippe Robert', speciality: 'Gynécologue', experience: '14 ans d\'expérience', image: 'images/doctors/doctor6.jpg' }
-            ],
-            'Cardiologie': [
-                { id: 7, name: 'Dr. Antoine Richard', speciality: 'Cardiologue', experience: '18 ans d\'expérience', image: 'images/doctors/doctor7.jpg' },
-                { id: 8, name: 'Dr. Marie Lambert', speciality: 'Cardiologue', experience: '11 ans d\'expérience', image: 'images/doctors/doctor8.jpg' }
-            ],
-            'Ophtalmologie': [
-                { id: 9, name: 'Dr. François Leroy', speciality: 'Ophtalmologue', experience: '16 ans d\'expérience', image: 'images/doctors/doctor9.jpg' },
-                { id: 10, name: 'Dr. Émilie Dupont', speciality: 'Ophtalmologue', experience: '7 ans d\'expérience', image: 'images/doctors/doctor10.jpg' }
-            ],
-            'Pédiatrie': [
-                { id: 11, name: 'Dr. Nathalie Simon', speciality: 'Pédiatre', experience: '19 ans d\'expérience', image: 'images/doctors/doctor11.jpg' },
-                { id: 12, name: 'Dr. Pierre Durand', speciality: 'Pédiatre', experience: '10 ans d\'expérience', image: 'images/doctors/doctor12.jpg' }
-            ]
-        };
-        
-        // Fonction pour sélectionner un domaine
-        function selectDomain(element, domain) {
-            // Enlever la classe 'selected' de tous les éléments
-            const domainCards = document.querySelectorAll('.domain-card');
-            domainCards.forEach(card => card.classList.remove('selected'));
-            
-            // Ajouter la classe 'selected' à l'élément cliqué
-            element.classList.add('selected');
-            
-            // Stocker le domaine sélectionné
-            selectedDomain = domain;
-            
-            // Activer le bouton suivant
-            document.getElementById('domain-next').disabled = false;
-        }
-        
-        // Fonction pour générer la liste des médecins
-        function generateDoctorsList() {
-            const doctorsList = document.getElementById('doctors-list');
-            doctorsList.innerHTML = '';
-            
-            if (doctors[selectedDomain]) {
-                doctors[selectedDomain].forEach(doctor => {
-                    const doctorCard = document.createElement('div');
-                    doctorCard.className = 'doctor-card';
-                    doctorCard.onclick = function() { selectDoctor(this, doctor.name); };
-                    
-                    doctorCard.innerHTML = `
-                        <div class="doctor-img">
-                            <img src="${doctor.image}" alt="${doctor.name}">
-                        </div>
-                        <div class="doctor-info">
-                            <div class="doctor-name">${doctor.name}</div>
-                            <div>${doctor.speciality}</div>
-                            <div>${doctor.experience}</div>
-                        </div>
-                    `;
-                    
-                    doctorsList.appendChild(doctorCard);
-                });
-            }
-        }
-        
-        // Fonction pour sélectionner un médecin
-        function selectDoctor(element, doctor) {
-            // Enlever la classe 'selected' de tous les éléments
-            const doctorCards = document.querySelectorAll('.doctor-card');
-            doctorCards.forEach(card => card.classList.remove('selected'));
-            
-            // Ajouter la classe 'selected' à l'élément cliqué
-            element.classList.add('selected');
-            
-            // Stocker le médecin sélectionné
-            selectedDoctor = doctor;
-            
-            // Activer le bouton suivant
-            document.getElementById('doctor-next').disabled = false;
-        }
         
         // Fonction pour générer le calendrier
         function generateCalendar() {
@@ -535,13 +378,12 @@
             
             // Actions spécifiques à chaque étape
             if (currentStep === 2) {
-                generateDoctorsList();
-            } else if (currentStep === 3) {
                 generateCalendar();
-            } else if (currentStep === 5) {
+            } else if (currentStep === 4) {
                 // Remplir les détails de confirmation
-                document.getElementById('confirm-domain').textContent = selectedDomain;
-                document.getElementById('confirm-doctor').textContent = selectedDoctor;
+                document.getElementById('confirm-name').textContent = document.getElementById('name').value;
+                document.getElementById('confirm-email').textContent = document.getElementById('email').value;
+                document.getElementById('confirm-phone').textContent = document.getElementById('phone').value;
                 document.getElementById('confirm-date').textContent = selectedDate;
                 document.getElementById('confirm-time').textContent = selectedTime;
             }
@@ -561,10 +403,16 @@
         
         // Fonction pour réinitialiser le formulaire
         function resetForm() {
-            selectedDomain = '';
-            selectedDoctor = '';
+            // Réinitialiser les champs
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
             selectedDate = '';
             selectedTime = '';
+            
+            // Réinitialiser les sélections visuelles
+            document.querySelectorAll('.day').forEach(day => day.classList.remove('selected'));
+            document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
             
             // Cacher l'étape actuelle
             document.getElementById(`step${currentStep}`).classList.remove('active');
@@ -575,9 +423,9 @@
             // Afficher la première étape
             document.getElementById(`step${currentStep}`).classList.add('active');
             
-            // Réinitialiser les sélections
-            document.querySelectorAll('.domain-card').forEach(card => card.classList.remove('selected'));
-            document.getElementById('domain-next').disabled = true;
+            // Réactiver les boutons
+            document.getElementById('date-next').disabled = true;
+            document.getElementById('time-next').disabled = true;
         }
         
         // Initialiser le calendrier au chargement

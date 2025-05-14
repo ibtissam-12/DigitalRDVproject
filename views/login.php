@@ -50,7 +50,8 @@
 <body>
     <div class="login-container text-center">
         <h2 class="text-success">CONNEXION</h2>
-        <form onsubmit="return handleLogin(event)">
+        <form action="../controller/UserController.php" method="post">
+    <input type="hidden" name="action" value="login">
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                 <input type="email" id="email" class="form-control" placeholder="Entrez votre Email" required>

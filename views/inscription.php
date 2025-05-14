@@ -126,7 +126,8 @@
     <div class="form-container">
         <h1 class="form-title">INSCRIPTION</h1>
         
-        <form id="registration-form" action="inscription.php" method="POST">
+        <form action="../controller/UserController.php" method="post">
+    <input type="hidden" name="action" value="register">
             <div class="form-group">
                 <label for="nom" class="form-label">NOM</label>
                 <input type="text" id="nom" name="nom" class="form-input" placeholder="Entrez votre nom" required>
