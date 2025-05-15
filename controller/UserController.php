@@ -5,24 +5,34 @@ session_start();
 $user = new User();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['action'] === 'register') {
+    if (isset($_POST['action']) && $_POST['action'] === 'register') {
+        // Récupérer les données du formulaire d'inscription
+        $nom = $_POST['nom'] ?? '';
+        $prenom = $_POST['prenom'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $mot_de_passe = $_POST['password'] ?? ''; // correction ici : "password" comme dans le formulaire
+
         // On récupère le résultat (true ou message d'erreur)
-        $result = $user->register($_POST['nom'], $_POST['prenom'], $_POST['email'], $_POST['mot_de_passe']);
+        $result = $user->register($nom, $prenom, $email, $mot_de_passe);
 
         if ($result === true) {
             // Inscription réussie
             header('Location: ../views/registrationSucces.html');
             exit;
         } else {
-            // Erreur (ex: email déjà utilisé), on redirige vers la page d'inscription en passant le message en GET
+            // Erreur, redirection vers la page d'inscription avec message d'erreur
             $error = urlencode($result);
-            header("Location: ../views/login.php?error=$error");
+            header("Location: ../views/inscription.php?error=$error"); // nom fichier corrigé ici
             exit;
         }
     }
 
-    if ($_POST['action'] === 'login') {
-        $result = $user->login($_POST['email'], $_POST['mot_de_passe']);
+    if (isset($_POST['action']) && $_POST['action'] === 'login') {
+        $email = $_POST['email'] ?? '';
+        $mot_de_passe = $_POST['password'] ?? ''; // correction ici aussi
+
+        $result = $user->login($email, $mot_de_passe);
+
         if ($result) {
             $_SESSION['user'] = $result;
             header('Location: ../views/accueil.php');
@@ -33,5 +43,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-?>
+
 
