@@ -72,7 +72,8 @@
         width: 100%;
       }
 
-      .login-btn {
+      /* Styles pour les boutons Profil et Se déconnecter */
+      .login-btn, .logout-btn {
         background-color: rgb(21, 194, 159);
         color: white !important;
         border-radius: 30px;
@@ -88,12 +89,22 @@
         box-shadow: 0 4px 12px rgba(21, 194, 159, 0.3);
       }
 
-      .login-btn img {
-        transition: transform 0.3s ease;
+      .logout-btn {
+        background-color: #f44336;
       }
 
-      .login-btn:hover img {
-        transform: rotate(15deg);
+      .logout-btn:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+      }
+
+      /* Style responsive pour les boutons */
+      @media (max-width: 768px) {
+        .login-btn, .logout-btn {
+          margin-bottom: 8px;
+          margin-left: 0;
+        }
       }
 
       /* Updated Header and Welcome Image */
@@ -363,7 +374,7 @@
 </head>
 <body>
    
-    <!-- Navbar with enhanced styling -->
+    <!-- Navbar avec boutons Profil et Se déconnecter -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
       <div class="container">
         <a href="#" class="navbar-brand"><img src="images/logo.png" alt="" width="40"></a>
@@ -376,7 +387,7 @@
           <!-- Liens à gauche -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link ml-4" href="accueil.html">Accueil</a>
+              <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
               <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
@@ -386,10 +397,13 @@
             </li>
           </ul>
     
-          <!-- Lien à droite -->
+          <!-- Liens à droite -->
           <ul class="navbar-nav">
+            <li class="nav-item mr-2">
+              <a class="nav-link font-weight-bold login-btn" href="profile.html">Profil <i class="fas fa-user-circle"></i></a>
+            </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold login-btn" href="login.html">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
+              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
@@ -399,10 +413,10 @@
        
     <!-- Header with improved welcome image -->
     <header>
-      <img src="images/Doctors-pana.png" alt="Medical team with heart icon" class="animate__animated animate__fadeIn animate__slower">
+      <img src="images/Doctors-pana.png" alt="Medical team with heart icon" class="animate_animated animatefadeIn animate_slower">
       <div class="header-content">
-        <p class="textimg text-center animate__animated animate__fadeInDown animate__delay-1s">Bienvenue dans</p>
-        <div class="nomproj text-center animate__animated animate__fadeInUp animate__delay-1s">DigitalRDV</div>
+        <p class="textimg text-center animate_animated animatefadeInDown animate_delay-1s">Bienvenue dans</p>
+        <div class="nomproj text-center animate_animated animatefadeInUp animate_delay-1s">DigitalRDV</div>
       </div>
     </header>
 

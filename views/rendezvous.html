@@ -43,6 +43,7 @@
             font-size: 24px;
             font-weight: 600;
         }
+
         
         .form-group {
             margin-bottom: 20px;
@@ -98,6 +99,14 @@
         }
         
         /* Calendar section */
+=======
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+
         .calendar {
             margin-bottom: 25px;
         }
@@ -289,6 +298,23 @@
                 flex-direction: column;
                 gap: 0;
             }
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
     </style>
 </head>
