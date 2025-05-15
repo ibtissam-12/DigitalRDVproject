@@ -75,7 +75,7 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
             Se connecter avec Google
         </button> -->
-        <p class="mt-3">Pas de compte ? <a href="inscription.html" class="fw-bold text-dark">s’inscrire</a></p>
+        <p class="mt-3">Pas de compte ? <a href="inscription.php" class="fw-bold text-dark">s’inscrire</a></p>
     </div>
     <script>
         function handleLogin(event) {
@@ -88,7 +88,7 @@
                 return false;
             }
             alert("Connexion réussie!");
-            window.location.href = "accueil.html";km
+            window.location.href = "accueil.php";km
             return true;
         }
 
@@ -108,5 +108,6 @@
     </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>
