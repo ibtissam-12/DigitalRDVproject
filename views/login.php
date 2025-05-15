@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Page de Connexion</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+    />
     <style>
         html, body {
             height: 100%;
@@ -91,11 +94,25 @@
         <form class="w-100" onsubmit="return handleLogin(event)">
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                <input type="email" id="email" class="form-control" placeholder="Entrez votre Email" required>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-control"
+                  placeholder="Entrez votre Email"
+                  name="email"
+                  required
+                />
             </div>
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" id="password" class="form-control" placeholder="Entrez votre mot de passe" required>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="Entrez votre mot de passe"
+                  name="password"
+                  required
+                />
                 <span class="input-group-text toggle-password" onclick="togglePassword()">
                     <i class="bi bi-eye"></i>
                 </span>
@@ -103,35 +120,39 @@
             <div class="text-end w-100 mb-2">
                 <a href="passwordReset.html" class="text-danger text-decoration-none small">Mot de passe oublié ?</a>
             </div>
-            <button type="submit" class="btn btn-success w-100 mt-2">SE CONNECTER</button>
+            <button type="submit" class="btn btn-success w-100 mt-2" name="action">SE CONNECTER</button>
         </form>
 
         <div class="d-flex align-items-center my-3">
-            <hr class="flex-grow-1"> <span class="mx-2">OU</span> <hr class="flex-grow-1">
+            <hr class="flex-grow-1" /> <span class="mx-2">OU</span> <hr class="flex-grow-1" />
         </div>
 
         <!-- Google Sign-In Button -->
-         
-<div id="g_id_onload"
-     data-client_id="679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com"
-     data-login_uri="http://localhost:8080/google-callback.php"
-     data-callback="handleCredentialResponse"
-     data-auto_prompt="false">
-</div>
 
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="outline"
-     data-text="signin_with"
-     data-size="large"
-     data-logo_alignment="left"
-     data-width="full"
-     data-local_hint="fr">
-</div>
+        <div
+          id="g_id_onload"
+          data-client_id="679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com"
+          data-login_uri="http://localhost:8080/google-callback.php"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false"
+        ></div>
+
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+          data-logo_alignment="left"
+          data-width="full"
+          data-local_hint="fr"
+        ></div>
         <!-- Sign Up Link -->
         <div class="signup-link">
-            <a href="inscription.php" class="btn btn-outline-success w-100 mt-3">PAS DE COMPTE ? S'INSCRIRE</a>
+            <a href="inscription.php" class="btn btn-outline-success w-100 mt-3"
+              >PAS DE COMPTE ? S'INSCRIRE</a
+            >
         </div>
     </div>
 
@@ -147,27 +168,32 @@
                 return false;
             }
 
-            // Send data to login.php
-            fetch('login.php', {
-                method: 'POST',
+            // Envoi des données à UserController.php
+            fetch("UserController.php", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
-                body: 'email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password)
+                body:
+                    "email=" +
+                    encodeURIComponent(email) +
+                    "&password=" +
+                    encodeURIComponent(password) +
+                    "&action=login", // <-- Ajout ici
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Redirect based on role
-                    window.location.href = data.redirect;
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Erreur lors de la connexion");
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data); // debug
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Erreur lors de la connexion");
+                });
 
             return false;
         }
@@ -186,53 +212,28 @@
             }
         }
 
-        function handleGoogleSignIn() {
-            // Cette fonction devrait déclencher le flux de connexion Google OAuth
-            // Pour une démonstration simple, nous allons juste simuler une redirection
-            console.log("Tentative de connexion avec Google...");
-            
-            // En production, vous devriez implémenter l'authentification Google OAuth ici
-            // Ce code est simplifié pour montrer le processus
-            try {
-                // Simuler une redirection vers Google pour l'authentification
-                alert("Redirection vers l'authentification Google...");
-                
-                // En production, vous devriez utiliser quelque chose comme:
-                // window.location.href = "https://your-backend.com/auth/google";
-                
-                // Pour les besoins de démonstration seulement:
-                setTimeout(() => {
-                    alert("Connexion Google réussie!");
-                    // Redirection après succès
-                    // window.location.href = "dashboard.html";
-                }, 1000);
-            } catch (error) {
-                console.error("Erreur de connexion Google:", error);
-                alert("Erreur lors de la connexion avec Google");
-            }
-        }
         function handleCredentialResponse(response) {
-    console.log("ID token Google :", response.credential);
-    
-    // Envoyer le token au backend pour vérifier l'utilisateur
-    fetch('login-google.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ credential: response.credential })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect;
-        } else {
-            alert("Erreur lors de la connexion Google");
+            console.log("ID token Google :", response.credential);
+
+            fetch("login-google.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ credential: response.credential }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert("Erreur lors de la connexion Google");
+                    }
+                });
         }
-    });
-}
     </script>
 </body>
 </html>
+
 
 
