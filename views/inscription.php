@@ -1,3 +1,7 @@
+
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -123,10 +127,20 @@
     </style>
 </head>
 <body>
+    <?php
+      if (isset($_SESSION['error'])) {
+        echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
+        unset($_SESSION['error']);
+       }
+       if (isset($_SESSION['success'])) {
+        echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
+        unset($_SESSION['success']);
+       }
+    ?>
     <div class="form-container">
         <h1 class="form-title">INSCRIPTION</h1>
         
-        <form id="registration-form" action="inscription.php" method="POST">
+        <form id="registration-form" action="traitement_inscription.php" method="POST">
             <div class="form-group">
                 <label for="nom" class="form-label">NOM</label>
                 <input type="text" id="nom" name="nom" class="form-input" placeholder="Entrez votre nom" required>
@@ -164,65 +178,30 @@
         
     </div>
 
+    
     <script>
-        document.getElementById('registration-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Reset error messages
-            document.querySelectorAll('.error-message').forEach(element => {
-                element.style.display = 'none';
-            });
-            
-            // Get form values
-            const nom = document.getElementById('nom').value.trim();
-            const prenom = document.getElementById('prenom').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            
-            // Validate form fields
-            let isValid = true;
-            
-            if (!nom) {
-                document.getElementById('nom-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            if (!prenom) {
-                document.getElementById('prenom-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Simple email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email || !emailRegex.test(email)) {
-                document.getElementById('email-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Password validation (at least 8 characters)
-            if (!password || password.length < 8) {
-                document.getElementById('password-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Confirm password validation
-            if (password !== confirmPassword) {
-                document.getElementById('confirm-password-error').style.display = 'block';
-                isValid = false;
-            }
-            
-            // If form is valid, you can submit it
-            if (isValid) {
-                console.log('Form is valid, submitting...');
-                // Here you would typically send the form data to your server
-                // You can replace this with your actual form submission code
-                window.location.href = "accueil.html";
-                alert('Inscription réussie!');
-                this.reset();
-            }
+    document.getElementById('registration-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+
+        fetch('inscription.php', {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+            alert('Inscription réussie !');
+            window.location.href = "login.html";
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert("Une erreur est survenue lors de l'inscription.");
         });
-    </script>
+    });
+</script>
 </body>
 </html>
 
