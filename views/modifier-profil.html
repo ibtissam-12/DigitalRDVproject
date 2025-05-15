@@ -487,20 +487,23 @@
           <!-- Liens à gauche -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link ml-4" href="accueil.html">Accueil</a>
+              <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
               <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="login.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="mes-rendez-vous.html">Mes rendez-vous</a>
             </li>
           </ul>
     
-          <!-- Lien à droite -->
+          <!-- Liens à droite -->
           <ul class="navbar-nav">
+            <li class="nav-item mr-2">
+              <a class="nav-link font-weight-bold login-btn" href="profile.html">Profil <i class="fas fa-user-circle"></i></a>
+            </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold login-btn" href="login.html">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
+              <a class="nav-link font-weight-bold logout-btn" href="login.html">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
@@ -535,7 +538,7 @@
               <input type="text" class="form-control" id="adresse" name="adresse" value="Rabat, Maroc">
             </div>
             <button type="submit" class="btn btn1 mt-3">Enregistrer</button>
-            <a href="profil.html" class="btn btn-secondary mt-3 ml-2">Annuler</a>
+            <a href="profile.html" class="btn btn-secondary mt-3 ml-2">Annuler</a>
           </form>
         </div>
       </div>

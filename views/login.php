@@ -1,9 +1,13 @@
 <?php
 session_start();
 
-// Email spécial du médecin
-define('DOCTOR_EMAIL', 'dr.john@clinic.com');
-define('DOCTOR_PASSWORD_HASH', password_hash('doctor123', PASSWORD_DEFAULT));
+// Connexion à la base de données
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=digitalrdv;charset=utf8", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die(json_encode(['success' => false, 'message' => 'Erreur de connexion à la base de données']));
+}
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
@@ -13,28 +17,35 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-// Simule une base de données
-$valid_users = [
-    'patient@example.com' => password_hash('patient123', PASSWORD_DEFAULT),
-];
+// Récupère l'utilisateur depuis la base de données
+$stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
+$stmt->execute([$email]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$isDoctor = false;
-
-if ($email === DOCTOR_EMAIL && password_verify($password, DOCTOR_PASSWORD_HASH)) {
-    $isDoctor = true;
-} elseif (isset($valid_users[$email]) && password_verify($password, $valid_users[$email])) {
-    $isDoctor = false;
-} else {
+if (!$user) {
     echo json_encode(['success' => false, 'message' => 'Identifiants incorrects']);
     exit;
 }
 
-// Stocke des infos en session
-$_SESSION['email'] = $email;
-$_SESSION['role'] = $isDoctor ? 'doctor' : 'user';
+// Vérifie le mot de passe
+if (!password_verify($password, $user['mot_de_passe'])) {
+    echo json_encode(['success' => false, 'message' => 'Mot de passe incorrect']);
+    exit;
+}
+
+// Stocke des informations en session
+$_SESSION['email'] = $user['email'];
+$_SESSION['role'] = $user['role'];
+
+// Redirige selon le rôle
+$redirect = match ($user['role']) {
+    'medecin', 'admin' => '/projetWeb/views/doctor-dashboard.php',
+    'patient' => '/projetWeb/views/patient-dashboard.php',
+    default => '/projetWeb/login.html'
+};
 
 echo json_encode([
     'success' => true,
-    'redirect' => $isDoctor ? 'doctor-dashboard.php' : 'patient-dashboard.php'
+    'redirect' => $redirect
 ]);
 ?>
