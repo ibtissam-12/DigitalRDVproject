@@ -118,7 +118,7 @@
         }
         ?>
 
-        <form action="../controller/UserController.php" method="post" id="registration-form">
+        <form action="../controller/userController.php" method="post" id="registration-form">
             <input type="hidden" name="action" value="register" />
             <div class="form-group">
                 <label for="nom" class="form-label">NOM</label>

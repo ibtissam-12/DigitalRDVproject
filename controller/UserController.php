@@ -1,5 +1,5 @@
 <?php
-require_once '../model/User.php';
+require_once '../model/user.php';
 session_start();
 
 $user = new User();
@@ -10,9 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nom = $_POST['nom'] ?? '';
         $prenom = $_POST['prenom'] ?? '';
         $email = $_POST['email'] ?? '';
-        $mot_de_passe = $_POST['password'] ?? '';
+        $mot_de_passe = $_POST['mot_de_passe'] ?? '';
+         $confirmer = $_POST['confirmer'] ?? '';
 
-        $result = $user->register($nom, $prenom, $email, $mot_de_passe);
+        $result = $user->register($nom, $prenom, $email, $mot_de_passe,$confirmer);
 
         if ($result === true) {
             header('Location: ../views/registrationSucces.html');
@@ -25,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Action de connexion
-    if (isset($_POST['action']) && $_POST['action'] === 'login') {
+    if ($_POST['action'] === 'login') {
         $email = $_POST['email'] ?? '';
-        $mot_de_passe = $_POST['password'] ?? '';
+        $mot_de_passe = $_POST['mot_de_passe'] ?? '';
 
         $result = $user->login($email, $mot_de_passe);
 
@@ -71,6 +72,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
         exit;
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ...autres actions...
+
+    // Action de réinitialisation du mot de passe
+    if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
+        $email = $_POST['email'] ?? '';
+        $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
+        $confirmer = $_POST['confirmer'] ?? '';
+
+        if ($nouveau_mdp !== $confirmer) {
+            $error = urlencode("Les mots de passe ne correspondent pas !");
+            header("Location: ../views/passwordReset.html?error=$error");
+            exit;
+        }
+
+        $result = $user->resetPassword($email, $nouveau_mdp);
+
+        if ($result === true) {
+            header('Location: ../views/login.php?success=1');
+            exit;
+        } else {
+            $error = urlencode($result);
+            header("Location: ../views/passwordReset.html?error=$error");
+            exit;
+        }
     }
 }
 ?>

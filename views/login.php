@@ -43,8 +43,9 @@
         .btn {
             border-radius: 10px;
             transition: all 0.3s;
+            position: relative;
         }
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             transform: scale(1.05);
         }
         .toggle-password {
@@ -80,6 +81,20 @@
             margin-top: 20px;
             width: 100%;
         }
+        .error-message {
+            color: #dc3545; /* Bootstrap danger */
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-align: left;
+            width: 100%;
+        }
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+            vertical-align: text-bottom;
+            margin-left: 6px;
+        }
         @media (max-width: 500px) {
             .login-container {
                 padding: 18px 6px;
@@ -92,6 +107,8 @@
     <div class="login-container text-center">
         <h2 class="text-success mb-4">CONNEXION</h2>
         <form class="w-100" onsubmit="return handleLogin(event)">
+            <div id="errorMessage" class="error-message" style="display:none;"></div>
+
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                 <input
@@ -110,17 +127,20 @@
                   id="password"
                   class="form-control"
                   placeholder="Entrez votre mot de passe"
-                  name="password"
+                  name="mot_de_passe"
                   required
                 />
-                <span class="input-group-text toggle-password" onclick="togglePassword()">
+                <span class="input-group-text toggle-password" onclick="togglePassword()" title="Afficher / masquer le mot de passe">
                     <i class="bi bi-eye"></i>
                 </span>
             </div>
             <div class="text-end w-100 mb-2">
                 <a href="passwordReset.html" class="text-danger text-decoration-none small">Mot de passe oublié ?</a>
             </div>
-            <button type="submit" class="btn btn-success w-100 mt-2" name="action">SE CONNECTER</button>
+            <button type="submit" class="btn btn-success w-100 mt-2" name="action" id="submitBtn">
+                SE CONNECTER
+                <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;"></span>
+            </button>
         </form>
 
         <div class="d-flex align-items-center my-3">
@@ -160,16 +180,27 @@
     <script>
         function handleLogin(event) {
             event.preventDefault();
-            const email = document.getElementById("email").value;
+
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.style.display = "none";
+            errorMessage.textContent = "";
+
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
 
             if (email === "" || password === "") {
-                alert("Veuillez remplir tous les champs.");
+                errorMessage.textContent = "Veuillez remplir tous les champs.";
+                errorMessage.style.display = "block";
                 return false;
             }
 
-            // Envoi des données à UserController.php
-            fetch("UserController.php", {
+            const submitBtn = document.getElementById("submitBtn");
+            const loadingSpinner = document.getElementById("loadingSpinner");
+
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = "inline-block";
+
+            fetch("../controller/UserController.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -177,22 +208,27 @@
                 body:
                     "email=" +
                     encodeURIComponent(email) +
-                    "&password=" +
+                    "&mot_de_passe=" +
                     encodeURIComponent(password) +
-                    "&action=login", // <-- Ajout ici
+                    "&action=login",
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data); // debug
                     if (data.success) {
                         window.location.href = data.redirect;
                     } else {
-                        alert(data.message);
+                        errorMessage.textContent = data.message || "Email ou mot de passe incorrect.";
+                        errorMessage.style.display = "block";
                     }
                 })
                 .catch((error) => {
                     console.error("Error:", error);
-                    alert("Erreur lors de la connexion");
+                    errorMessage.textContent = "Erreur lors de la connexion. Veuillez réessayer.";
+                    errorMessage.style.display = "block";
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    loadingSpinner.style.display = "none";
                 });
 
             return false;
@@ -234,6 +270,7 @@
     </script>
 </body>
 </html>
+
 
 
 

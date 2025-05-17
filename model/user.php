@@ -17,13 +17,15 @@ class User {
      * @param string $mot_de_passe
      * @return bool|string Retourne true si succès, message d'erreur sinon
      */
-    public function register($nom, $prenom, $email, $mot_de_passe) {
+    public function register($nom, $prenom, $email, $mot_de_passe,$confirmer) {
         // Vérifier si l'email existe déjà
         $checkSql = "SELECT COUNT(*) FROM utilisateurs WHERE email = ?";
         $checkStmt = $this->conn->prepare($checkSql);
         $checkStmt->execute([$email]);
         $count = $checkStmt->fetchColumn();
-
+        if ($mot_de_passe !== $confirmer) {
+        return "Les mots de passe ne correspondent pas !";
+    }
         if ($count > 0) {
             return "Email déjà utilisé !";
         }

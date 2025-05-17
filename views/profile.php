@@ -317,20 +317,20 @@
           <!-- Liens à gauche -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link ml-4" href="accueil.html">Accueil</a>
+              <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="login.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="login.php">Mes rendez-vous</a>
             </li>
           </ul>
     
           <!-- Lien à droite -->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link font-weight-bold login-btn" href="login.html">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
+              <a class="nav-link font-weight-bold login-btn" href="login.php">Se connecter  <img src="images/icon1.png" alt="" width="20px"></a>
             </li>
           </ul>
     
@@ -364,7 +364,7 @@
                 <label>Adresse :</label>
                 <p>Rabat, Maroc</p>
               </div>
-              <a href="modifier-profil.html" class="btn btn1 mt-3">Modifier mes informations</a>
+              <a href="modifier-profil.php" class="btn btn1 mt-3">Modifier mes informations</a>
             </div>
           </div>
         </div>
