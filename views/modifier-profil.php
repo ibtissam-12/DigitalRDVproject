@@ -1,200 +1,187 @@
 <?php
 session_start();
-// Configuration de la base de données
-$db_host = "localhost";
-$db_username = "root";
-$db_password = "";
-$db_name = "digitalrdv";
 
-// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-    header("Location: login.php");
+    // ... (garde ton code d'accès refusé ici)
+    echo '
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Accès refusé</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css ">
+        <style>body{background-color:#f8f9fa;display:flex;justify-content:center;align-items:center;height:100vh;font-family:"Poppins",sans-serif;}.access-denied{text-align:center;padding:30px;background:white;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}.access-denied h1{color:#dc3545;margin-bottom:20px;}.access-denied p{font-size:1.1rem;margin-bottom:30px;}.access-denied a{text-decoration:none;}</style>
+    </head>
+    <body>
+        <div class="access-denied">
+            <h1>Accès refusé</h1>
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+            <a href="login.php" class="btn btn-primary">Se connecter</a>
+        </div>
+    </body>
+    </html>
+    ';
     exit;
 }
 
-// Récupérer les informations de l'utilisateur
-try {
-    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_username, $db_password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Connexion à la base de données
+$pdo = new PDO('mysql:host=localhost;dbname=digitalrdv;charset=utf8', 'root', '');
 
-    $user_id = $_SESSION['user_id'];
-    $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Récupérer les infos actuelles de l'utilisateur
+$user_id = $_SESSION['user_id'];
+$stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user) {
-        // Si l'utilisateur n'existe pas dans la base de données
-        session_destroy();
-        header("Location: login.php");
-        exit;
-    }
-} catch (PDOException $e) {
-    die("Erreur de connexion à la base de données: " . $e->getMessage());
-}
+$message = "";
 
-// Gestion de la mise à jour des informations de l'utilisateur
+// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom = htmlspecialchars($_POST['nom']);
+    $prenom = htmlspecialchars($_POST['prenom']);
+    $email = htmlspecialchars($_POST['email']);
+
+    $sql = "UPDATE utilisateurs SET nom = :nom, prenom = :prenom, email = :email WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
     try {
-        // Récupérer les données du formulaire
-        $nom = $_POST['nom'];
-        $email = $_POST['email'];
-        $tel = $_POST['tel'];
-        $adresse = $_POST['adresse'];
-
-        // Mettre à jour les informations de l'utilisateur dans la base de données
-        $stmt = $pdo->prepare("UPDATE utilisateurs SET nom = ?, email = ?, tel = ?, adresse = ? WHERE id = ?");
-        $stmt->execute([$nom, $email, $tel, $adresse, $user_id]);
-
-        // Rediriger vers la page de profil après la mise à jour
-        header("Location: profil.php");
-        exit;
+        $stmt->execute([
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':email' => $email,
+            ':id' => $user_id
+        ]);
+        $message = "Profil mis à jour avec succès.";
+        // Met à jour les infos affichées
+        $user['nom'] = $nom;
+        $user['prenom'] = $prenom;
+        $user['email'] = $email;
     } catch (PDOException $e) {
-        die("Erreur lors de la mise à jour des informations: " . $e->getMessage());
+        $message = "Erreur lors de la mise à jour : " . $e->getMessage();
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier mes informations - DigitalRDV</title>
-    <!-- Include Bootstrap and other styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Connexion / Profil - DigitalRDV</title>
+    <link rel="icon" href="images/logo.png" type="image/gif" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
       body {
         font-family: 'Poppins', sans-serif;
         overflow-x: hidden;
+        padding-top: 80px;
       }
-      body {
-        background-color: #f8f9fa;
-      }
-      /* Navbar Styling - Compact Version */
       .navbar {
         background-color: rgba(255, 255, 255, 0.95) !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 8px 0; /* Reduced from 15px to 8px */
+        padding: 8px 0;
         transition: all 0.3s ease;
       }
-
       .navbar-brand img {
-        height: auto; /* Add this to maintain aspect ratio */
-        max-height: 40px; /* Control the logo size */
+        height: auto;
+        max-height: 40px;
         transition: transform 0.3s ease;
       }
-
       .navbar-brand img:hover {
-        transform: scale(1.05); /* Reduced scale effect */
+        transform: scale(1.05);
       }
-
       .navbar .nav-link {
         color: #333 !important;
         font-weight: 500;
-        margin: 0 8px; /* Reduced from 10px to 8px */
-        padding: 5px 3px; /* Add custom padding for better control */
+        margin: 0 8px;
+        padding: 5px 3px;
         position: relative;
         transition: color 0.3s ease;
       }
-
       .navbar .nav-link:hover {
         color: rgb(21, 194, 159) !important;
       }
-
       .navbar .nav-link::after {
         content: '';
         position: absolute;
         width: 0%;
         height: 2px;
         background-color: rgb(21, 194, 159);
-        bottom: -2px; /* Changed from -5px to -2px */
+        bottom: -2px;
         left: 0;
         transition: width 0.3s ease;
       }
-
       .navbar .nav-link:hover::after {
         width: 100%;
       }
-
       .login-btn {
         background-color: rgb(21, 194, 159);
         color: white !important;
         border-radius: 30px;
-        padding: 6px 16px !important; /* Reduced padding */
+        padding: 6px 16px !important;
         transition: all 0.3s ease;
         font-weight: 600;
-        font-size: 0.95rem; /* Slightly smaller font */
+        font-size: 0.95rem;
       }
-
       .login-btn:hover {
         background-color: rgb(16, 165, 136);
-        transform: translateY(-2px); /* Reduced from -3px to -2px */
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(21, 194, 159, 0.3);
       }
-
-      .login-btn img {
-        transition: transform 0.3s ease;
+      .logout-btn {
+        color: #333 !important;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
       }
-
-      .login-btn:hover img {
-        transform: rotate(15deg);
+      .logout-btn:hover {
+        color: rgb(21, 194, 159) !important;
       }
-      .navbar:hover {
-        color: rgb(9, 163, 112);
+      .profile-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 50px;
       }
-    
-    
-    
-      body {
-        padding-top: 80px; /* Ajuste selon la hauteur de ta navbar */
+      .profile-title {
+        color: rgb(21, 194, 159);
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
       }
-    
-    .shadow-custom {
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .profile-form {
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      margin-top: 50px;
-    }
-
-      @keyframes glow {
-        0% {
-          text-shadow: 0 0 10px rgba(21, 194, 159, 0.5);
-        }
-        50% {
-          text-shadow: 0 0 20px rgba(21, 194, 159, 0.8), 0 0 30px rgba(21, 194, 159, 0.5);
-        }
-        100% {
-          text-shadow: 0 0 10px rgba(21, 194, 159, 0.5);
-        }
+      .profile-info label {
+        font-weight: bold;
+        color: #555;
+      }
+      .profile-info p {
+        margin-bottom: 15px;
+        font-size: 16px;
       }
       .btn1 {
-        border-radius: 30px;
+        border-radius: 60px;
         background-color: rgb(21, 194, 159);
+        border-color: transparent;
         color: white;
-        border: none;
-        padding: 10px 25px;
+        padding: 10px 30px;
         font-weight: 500;
         transition: all 0.3s ease;
         display: inline-block;
       }
-
       .btn1:hover {
-        background-color: rgb(16, 165, 136);
+        background-color: rgb(17, 173, 140);
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(21, 194, 159, 0.3);
       }
-
-      /* Footer Styling */
-      footer {
-        margin-top: 50px;
+      .alert {
+        border-radius: 15px;
+        padding: 15px 20px;
       }
-
+      footer {
+        margin-top: 80px;
+      }
       footer h5 {
         color: rgb(21, 194, 159);
         font-weight: 600;
@@ -202,7 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         padding-bottom: 15px;
         margin-bottom: 20px;
       }
-
       footer h5::after {
         content: '';
         position: absolute;
@@ -212,204 +198,162 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         bottom: 0;
         left: 0;
       }
-
       footer p {
         color: #666;
         line-height: 1.7;
       }
-
       footer a img {
         transition: all 0.3s ease;
       }
-
       footer a:hover img {
         transform: translateY(-5px);
       }
-
       .copyright {
         background-color: rgb(21, 194, 159);
         color: white !important;
         padding: 15px 0;
       }
-
-      /* Animation classes */
       .fade-in {
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.5s ease, transform 0.5s ease;
       }
-
       .fade-in.active {
         opacity: 1;
         transform: translateY(0);
       }
-
-      /* Media Queries for Responsiveness */
-      @media (max-width: 992px) {
-        .textimg {
-          font-size: 35px;
-        }
-        .nomproj {
-          font-size: 50px;
-        }
-        .aboutimg {
-          width: 280px;
-          height: 280px;
-          margin: 15px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .textimg {
-          font-size: 30px;
-        }
-        .nomproj {
-          font-size: 40px;
-        }
-        .aboutimg {
-          width: 250px;
-          height: 250px;
-          margin: 10px;
-        }
-        header {
-          height: 50vh;
-        }
-      }
-
-      @media (max-width: 576px) {
-        .textimg {
-          font-size: 24px;
-          width: 90%;
-          text-align: center;
-        }
-        .nomproj {
-          font-size: 32px;
-          width: 90%;
-          text-align: center;
-        }
-        .aboutimg {
-          width: 80%;
-          height: auto;
-          margin: 10px auto;
-          display: block;
-        }
-      }
-      .profile-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        margin-top: 50px;
-      }
-  
-      .profile-title {
-        color: rgb(21, 194, 159);
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-  
-      .profile-info label {
-        font-weight: bold;
-      }
-  
-      .btn1 {
-        border-radius: 60px;
-        background-color: rgb(21, 194, 159);
-        border-color: transparent;
-        color: white;
-        padding: 10px 30px;
-      }
-  
-      .btn1:hover {
-        background-color: rgb(17, 173, 140);
-      }
-      .shadow-custom {
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .form-title {
-          color: rgb(21, 194, 159);
-          font-size: 30px;
-          font-weight: bold;
-          margin-bottom: 25px;
-          text-align: center;
-        }
-    
-        .btn1 {
-          border-radius: 60px;
-          background-color: rgb(21, 194, 159);
-          border: none;
-          color: white;
-          padding: 10px 30px;
-        }
-    
-        .btn1:hover {
-          background-color: rgb(17, 173, 140);
-        }
-    
-        label {
-          font-weight: bold;
-        }
-    
-
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">DigitalRDV</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="accueil.php">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="rendezvous.php">Prendre rendez-vous</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="mes-rendez-vous.php">Mes rendez-vous</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Profil <i class="bi bi-person-circle"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Se déconnecter <i class="bi bi-box-arrow-right"></i></a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
+      <div class="container">
+        <a href="accueil.php" class="navbar-brand"><img src="images/logo.png" alt="DigitalRDV Logo" width="40"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link ml-4" href="accueil.php">Accueil</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <?php if (isset($_SESSION['user_id'])): ?>
+            <li class="nav-item mr-2">
+              <a class="nav-link font-weight-bold login-btn" href="login.php">Profil <i class="fas fa-user-circle"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+            <?php else: ?>
+            <li class="nav-item mr-2">
+              <a class="nav-link font-weight-bold login-btn" href="login.php">Connexion</a>
+            </li>
+            <?php endif; ?>
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <div class="container mt-5">
-        <h2 class="text-success text-center">Modifier mes informations</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <div class="mb-3">
-                <label for="nom" class="form-label">Nom complet</label>
-                <input type="text" class="form-control" id="nom" name="nom" value="<?php echo htmlspecialchars($user['nom']); ?>" required>
+    <div class="container">
+      <?php if ($message): ?>
+        <div class="alert alert-info mt-4"><?php echo $message; ?></div>
+      <?php endif; ?>
+      <div class="row justify-content-center">
+        <div class="col-md-8 profile-form">
+          <h3 class="text-center mb-4" style="color: rgb(21, 194, 159); font-weight: bold; letter-spacing: 1px;">
+            <i class="fas fa-user-edit mr-2"></i>Modifier mes informations
+          </h3>
+          <form action="" method="post">
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input type="text" class="form-control" id="nom" name="nom" value="<?php echo htmlspecialchars($user['nom']); ?>" required>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Adresse email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+            <div class="form-group">
+              <label for="prenom">Prénom</label>
+              <input type="text" class="form-control" id="prenom" name="prenom" value="<?php echo htmlspecialchars($user['prenom']); ?>" required>
             </div>
-            <div class="mb-3">
-                <label for="tel" class="form-label">Téléphone</label>
-                <input type="tel" class="form-control" id="tel" name="tel" value="<?php echo htmlspecialchars($user['tel']); ?>">
+            <div class="form-group">
+              <label for="email">Adresse email</label>
+              <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
             </div>
-            <div class="mb-3">
-                <label for="adresse" class="form-label">Adresse</label>
-                <input type="text" class="form-control" id="adresse" name="adresse" value="<?php echo htmlspecialchars($user['adresse']); ?>">
-            </div>
-            <button type="submit" class="btn btn-success">Enregistrer</button>
-            <a href="profil.php" class="btn btn-secondary ms-2">Annuler</a>
-        </form>
+            <button type="submit" class="btn btn1 mt-3">Enregistrer</button>
+            <a href="profile.php" class="btn btn-secondary mt-3 ml-2">Annuler</a>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <!-- Include Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="bg-light text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0 fade-in">
+            <h5>Contactez-nous</h5>
+            <p>
+              Vous avez des questions ? N'hésitez pas à nous contacter pour toute assistance ou information supplémentaire.
+            </p>
+            <div class="mt-4">
+              <i class="fas fa-phone-alt mr-2" style="color: rgb(21, 194, 159);"></i> +33 1 23 45 67 89<br>
+              <i class="fas fa-envelope mr-2 mt-2" style="color: rgb(21, 194, 159);"></i> contact@digitalrdv.com
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0 fade-in">
+            <h5>Suivez-nous</h5>
+            <p>Restez connectés avec nous sur les réseaux sociaux pour les dernières nouvelles et mises à jour.</p>
+            <a href="#" class="mr-3">
+              <img src="images/facebook.png" alt="Facebook" width="40" class="m-2">
+            </a>
+            <a href="#" class="mr-3">
+              <img src="images/instagram.png" alt="Instagram" width="40" class="m-2">
+            </a>
+            <a href="#" class="mr-3">
+              <img src="images/linkden.png" alt="LinkedIn" width="40" class="m-2">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center p-3 copyright">
+        © 2025 DigitalRDV - Tous droits réservés
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.style.padding = '5px 0';
+          navbar.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        } else {
+          navbar.style.padding = '8px 0';
+          navbar.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+        }
+      });
+      document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const fadeInOnScroll = function() {
+          for (let i = 0; i < fadeElements.length; i++) {
+            const elem = fadeElements[i];
+            const distInView = elem.getBoundingClientRect().top - window.innerHeight + 100;
+            if (distInView < 0) {
+              elem.classList.add('active');
+            }
+          }
+        };
+        window.addEventListener('scroll', fadeInOnScroll);
+        fadeInOnScroll();
+        setTimeout(function() {
+          $('.alert').alert('close');
+        }, 5000);
+      });
+    </script>
 </body>
 </html>

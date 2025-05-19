@@ -1,3 +1,56 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // L'utilisateur n'est pas connecté, afficher un message d'erreur
+    echo '
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Accès refusé</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css ">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                font-family: "Poppins", sans-serif;
+            }
+            .access-denied {
+                text-align: center;
+                padding: 30px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            .access-denied h1 {
+                color: #dc3545;
+                margin-bottom: 20px;
+            }
+            .access-denied p {
+                font-size: 1.1rem;
+                margin-bottom: 30px;
+            }
+            .access-denied a {
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="access-denied">
+            <h1>Accès refusé</h1>
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+            <a href="login.php" class="btn btn-primary">Se connecter</a>
+        </div>
+    </body>
+    </html>
+    ';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
@@ -390,10 +443,10 @@
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="mes-rendez-vous.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
             </li>
           </ul>
     
@@ -403,7 +456,7 @@
               <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+             <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
@@ -447,7 +500,7 @@
               </div>
               <h3>Prendre rendez-vous</h3>
               <p>Réservez facilement vos consultations médicales en ligne en quelques clics. Choisissez le médecin, la spécialité et l'horaire qui vous conviennent le mieux, sans file d'attente ni déplacement inutile.</p>
-              <a href="rendezvous.html"><button class="btn1">Prendre RDV</button></a>
+              <a href="rendezvous.php"><button class="btn1">Prendre RDV</button></a>
             </div>
           </div>
         <div class="col-md-4 mb-4 fade-in">
@@ -455,9 +508,11 @@
             <div class="service-icon mb-3">
               <i class="fas fa-comments fa-3x" style="color: rgb(21, 194, 159);"></i>
             </div>
-            <h3>Chat avec les médecins</h3>
-            <p>Bénéficiez d'une communication directe et sécurisée avec nos médecins. Posez vos questions, obtenez des conseils médicaux ou des suivis sans avoir à vous déplacer.</p>
-            <a href="chat.html"><button class="btn1">Chat</button></a>
+          
+            <h3>Mes rendez-vous</h3>
+<p>Consultez et gérez facilement vos rendez-vous médicaux. Accédez à l’historique, modifiez ou annulez vos rendez-vous, le tout en ligne et en toute sécurité.</p>
+
+            <a href="mes-rendez-vous.php"><button class="btn1">Mes rendez-vous</button></a>
           </div>
         </div>
         <div class="col-md-4 mb-4 fade-in">
@@ -467,7 +522,7 @@
             </div>
             <h3>Services disponibles 24/7</h3>
             <p>Parce que votre santé n'attend pas, notre service est accessible 24 heures sur 24 et 7 jours sur 7. Prenez rendez-vous à tout moment, même les week-ends et jours fériés.</p>
-            <a href="rendezvous.html"><button class="btn1">Prendre RDV</button></a>
+            <a href="rendezvous.php"><button class="btn1">Prendre RDV</button></a>
           </div>
         </div>
       </div>

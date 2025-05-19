@@ -1,4 +1,56 @@
+<?php
+session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    // L'utilisateur n'est pas connecté, afficher un message d'erreur
+    echo '
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Accès refusé</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css ">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                font-family: "Poppins", sans-serif;
+            }
+            .access-denied {
+                text-align: center;
+                padding: 30px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            .access-denied h1 {
+                color: #dc3545;
+                margin-bottom: 20px;
+            }
+            .access-denied p {
+                font-size: 1.1rem;
+                margin-bottom: 30px;
+            }
+            .access-denied a {
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="access-denied">
+            <h1>Accès refusé</h1>
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+            <a href="login.php" class="btn btn-primary">Se connecter</a>
+        </div>
+    </body>
+    </html>
+    ';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -270,6 +322,8 @@
 </head>
 <body>
    
+    <!-- NAVBAR  -->
+
     <!-- Navbar avec boutons Profil et Se déconnecter -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
       <div class="container">
@@ -286,10 +340,10 @@
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="mes-rendez-vous.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
             </li>
           </ul>
     
@@ -299,15 +353,14 @@
               <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+             <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
         </div>
       </div>
     </nav>
-<!--        
-    CONTENU  -->
+    <!-- Fin de la navbar -->
     <div class="container py-5">
       <h2 class="text-center mb-4" style="color: rgb(21,194,159);" data-aos="fade-up">Mes Rendez-vous</h2>
   
@@ -328,7 +381,7 @@
       </div>
   
       <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="300">
-        <a href="rendezvous.html" class="btn btn-retour">Prendre un nouveau rendez-vous</a>
+        <a href="rendezvous.php" class="btn btn-retour">Prendre un nouveau rendez-vous</a>
       </div>
     </div>
 

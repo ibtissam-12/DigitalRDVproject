@@ -1,8 +1,62 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // L'utilisateur n'est pas connecté, afficher un message d'erreur
+    echo '
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Accès refusé</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css ">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                font-family: "Poppins", sans-serif;
+            }
+            .access-denied {
+                text-align: center;
+                padding: 30px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            .access-denied h1 {
+                color: #dc3545;
+                margin-bottom: 20px;
+            }
+            .access-denied p {
+                font-size: 1.1rem;
+                margin-bottom: 30px;
+            }
+            .access-denied a {
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="access-denied">
+            <h1>Accès refusé</h1>
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+            <a href="login.php" class="btn btn-primary">Se connecter</a>
+        </div>
+    </body>
+    </html>
+    ';
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.png" type="image/gif" />
     <title>Vérification du code</title>
     <style>
         /* Reset and base styles */
