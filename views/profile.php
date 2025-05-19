@@ -1,14 +1,73 @@
+<?php
+// Start the session (always at the top of your PHP files)
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header("Location: login.html");
+    exit();
+}
+
+// Database configuration - update with your credentials
+$db_host = "localhost";
+$db_username = "root"; // CHANGE THIS
+$db_password = ""; // CHANGE THIS
+$db_name = "digitalrdv"; // CHANGE THIS
+
+// Connect to the database with error handling
+try {
+    $conn = new mysqli($db_host, $db_username, $db_password, $db_name);
+    
+    // Check connection
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
+    
+    // Get user ID from session
+    $user_id = $_SESSION['user_id'];
+    
+    // Prepare SQL statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT nom_complet, email, telephone, adresse FROM utilisateurs WHERE id = ?");
+    
+    if (!$stmt) {
+        throw new Exception("Query preparation failed: " . $conn->error);
+    }
+    
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    // Check if user exists
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    } else {
+        throw new Exception("User not found. Your account may have been deleted.");
+    }
+    
+    // Close the database connection
+    $stmt->close();
+    $conn->close();
+    
+} catch (Exception $e) {
+    // Log error (to a file ideally, not displayed to user in production)
+    error_log("Profile page error: " . $e->getMessage());
+    
+    // Display user-friendly error
+    $error_message = "Une erreur s'est produite lors de la récupération de votre profil. Veuillez réessayer plus tard.";
+}
+?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes rendez-vous</title>
+    <title>Mon Profil - DigitalRDV</title>
     <!-- fevicon -->
     <link rel="icon" href="images/logo.png" type="image/gif" />
     <link rel="stylesheet" href="style.css">
-    <!-- Lien vers le fichier CSS de Bootstrap -->
+    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -17,39 +76,36 @@
     <!-- Animation library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
-    <!-- Lien vers le fichier JavaScript de Bootstrap (avec jQuery et Popper.js) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
       body {
         font-family: 'Poppins', sans-serif;
         overflow-x: hidden;
+        padding-top: 80px; /* Ajuste selon la hauteur de ta navbar */
       }
 
-      /* Navbar Styling - Compact Version */
+      /* Navbar Styling */
       .navbar {
         background-color: rgba(255, 255, 255, 0.95) !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 8px 0; /* Reduced from 15px to 8px */
+        padding: 8px 0;
         transition: all 0.3s ease;
       }
 
       .navbar-brand img {
-        height: auto; /* Add this to maintain aspect ratio */
-        max-height: 40px; /* Control the logo size */
+        height: auto;
+        max-height: 40px;
         transition: transform 0.3s ease;
       }
 
       .navbar-brand img:hover {
-        transform: scale(1.05); /* Reduced scale effect */
+        transform: scale(1.05);
       }
 
       .navbar .nav-link {
         color: #333 !important;
         font-weight: 500;
-        margin: 0 8px; /* Reduced from 10px to 8px */
-        padding: 5px 3px; /* Add custom padding for better control */
+        margin: 0 8px;
+        padding: 5px 3px;
         position: relative;
         transition: color 0.3s ease;
       }
@@ -64,7 +120,7 @@
         width: 0%;
         height: 2px;
         background-color: rgb(21, 194, 159);
-        bottom: -2px; /* Changed from -5px to -2px */
+        bottom: -2px;
         left: 0;
         transition: width 0.3s ease;
       }
@@ -77,93 +133,81 @@
         background-color: rgb(21, 194, 159);
         color: white !important;
         border-radius: 30px;
-        padding: 6px 16px !important; /* Reduced padding */
+        padding: 6px 16px !important;
         transition: all 0.3s ease;
         font-weight: 600;
-        font-size: 0.95rem; /* Slightly smaller font */
+        font-size: 0.95rem;
       }
 
       .login-btn:hover {
         background-color: rgb(16, 165, 136);
-        transform: translateY(-2px); /* Reduced from -3px to -2px */
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(21, 194, 159, 0.3);
       }
 
-      .login-btn img {
-        transition: transform 0.3s ease;
+      .logout-btn {
+        color: #333 !important;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
       }
 
-      .login-btn:hover img {
-        transform: rotate(15deg);
+      .logout-btn:hover {
+        color: rgb(21, 194, 159) !important;
       }
-      .navbar:hover {
-        color: rgb(9, 163, 112);
+
+      /* Profile Card Styling */
+      .profile-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 50px;
       }
-      .shadow-custom {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+      .profile-title {
+        color: rgb(21, 194, 159);
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
       }
-      .btn-annuler {
-        background-color: rgb(255, 87, 87);
-        border: none;
-        border-radius: 30px;
-        color: white;
-        padding: 6px 15px;
-      }
-      .btn-annuler:hover {
-        background-color: rgb(220, 53, 69);
-      }
-      .table thead {
-        background-color: rgb(21,194,159);
-        color: white;
-      }
-      .btn-retour {
-        border-radius: 50px;
-        background-color: rgb(21,194,159);
-        color: white;
-        border: none;
-        padding: 8px 20px;
-      }
-      .btn-retour:hover {
-        background-color: rgb(17, 160, 130);
-      }
-      body {
-        padding-top: 80px; /* Ajuste selon la hauteur de ta navbar */
+  
+      .profile-info label {
+        font-weight: bold;
+        color: #555;
       }
       
-
-    
-
-      @keyframes glow {
-        0% {
-          text-shadow: 0 0 10px rgba(21, 194, 159, 0.5);
-        }
-        50% {
-          text-shadow: 0 0 20px rgba(21, 194, 159, 0.8), 0 0 30px rgba(21, 194, 159, 0.5);
-        }
-        100% {
-          text-shadow: 0 0 10px rgba(21, 194, 159, 0.5);
-        }
+      .profile-info p {
+        margin-bottom: 15px;
+        font-size: 16px;
       }
+  
       .btn1 {
-        border-radius: 30px;
+        border-radius: 60px;
         background-color: rgb(21, 194, 159);
+        border-color: transparent;
         color: white;
-        border: none;
-        padding: 10px 25px;
+        padding: 10px 30px;
         font-weight: 500;
         transition: all 0.3s ease;
         display: inline-block;
       }
-
+  
       .btn1:hover {
-        background-color: rgb(16, 165, 136);
+        background-color: rgb(17, 173, 140);
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(21, 194, 159, 0.3);
       }
 
+      /* Alert Styling */
+      .alert {
+        border-radius: 15px;
+        padding: 15px 20px;
+      }
+
       /* Footer Styling */
       footer {
-        margin-top: 50px;
+        margin-top: 80px;
       }
 
       footer h5 {
@@ -214,66 +258,13 @@
         opacity: 1;
         transform: translateY(0);
       }
-
-      /* Media Queries for Responsiveness */
-      @media (max-width: 992px) {
-        .textimg {
-          font-size: 35px;
-        }
-        .nomproj {
-          font-size: 50px;
-        }
-        .aboutimg {
-          width: 280px;
-          height: 280px;
-          margin: 15px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .textimg {
-          font-size: 30px;
-        }
-        .nomproj {
-          font-size: 40px;
-        }
-        .aboutimg {
-          width: 250px;
-          height: 250px;
-          margin: 10px;
-        }
-        header {
-          height: 50vh;
-        }
-      }
-
-      @media (max-width: 576px) {
-        .textimg {
-          font-size: 24px;
-          width: 90%;
-          text-align: center;
-        }
-        .nomproj {
-          font-size: 32px;
-          width: 90%;
-          text-align: center;
-        }
-        .aboutimg {
-          width: 80%;
-          height: auto;
-          margin: 10px auto;
-          display: block;
-        }
-      }
     </style>
-
 </head>
 <body>
-   
-    <!-- Navbar avec boutons Profil et Se déconnecter -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
       <div class="container">
-        <a href="#" class="navbar-brand"><img src="images/logo.png" alt="" width="40"></a>
+        <a href="accueil.php" class="navbar-brand"><img src="images/logo.png" alt="DigitalRDV Logo" width="40"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -286,10 +277,10 @@
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="mes-rendez-vous.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
             </li>
           </ul>
     
@@ -299,81 +290,58 @@
               <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+              <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
-    
         </div>
       </div>
     </nav>
-<!--        
-    CONTENU  -->
-    <div class="container py-5">
-      <h2 class="text-center mb-4" style="color: rgb(21,194,159);" data-aos="fade-up">Mes Rendez-vous</h2>
-  
-      <div class="table-responsive" data-aos="zoom-in" data-aos-delay="200">
-        <table class="table table-hover bg-white shadow-sm rounded">
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Date</th>
-              <th>Heure</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="table-body">
-           
-          </tbody>
-        </table>
-      </div>
-  
-      <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="300">
-        <a href="rendezvous.html" class="btn btn-retour">Prendre un nouveau rendez-vous</a>
+    
+    <!-- Page Content -->  
+    <div class="container">
+      <?php if (isset($_GET['updated']) && $_GET['updated'] == 'success'): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Succès!</strong> Votre profil a été mis à jour avec succès.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <?php endif; ?>
+      
+      <?php if (isset($error_message)): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Erreur!</strong> <?php echo $error_message; ?>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <?php endif; ?>
+      
+      <div class="row justify-content-center">
+        <div class="col-md-8 profile-card">
+          <div class="profile-title">Mon Profil</div>
+          <div class="profile-info">
+            <div class="form-group">
+              <label>Nom complet :</label>
+              <p><?php echo isset($user) ? htmlspecialchars($user['nom_complet']) : ''; ?></p>
+            </div>
+            <div class="form-group">
+              <label>Email :</label>
+              <p><?php echo isset($user) ? htmlspecialchars($user['email']) : ''; ?></p>
+            </div>
+            <div class="form-group">
+              <label>Téléphone :</label>
+              <p><?php echo isset($user) ? htmlspecialchars($user['telephone']) : ''; ?></p>
+            </div>
+            <div class="form-group">
+              <label>Adresse :</label>
+              <p><?php echo isset($user) ? htmlspecialchars($user['adresse']) : ''; ?></p>
+            </div>
+            <a href="modifier-profil.php" class="btn btn1 mt-3">Modifier mes informations</a>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- SCRIPTS  -->
-    <script>
-      let rendezvous = [
-        { nom: "Hayrana", date: "2025-05-04", heure: "14:00" },
-        { nom: "Hayrana", date: "2025-05-12", heure: "09:30" }
-      ];
-  
-      function afficherRendezvous() {
-        const tbody = document.getElementById("table-body");
-        tbody.innerHTML = "";
-  
-        if (rendezvous.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Aucun rendez-vous prévu.</td></tr>`;
-          return;
-        }
-  
-        rendezvous.forEach((rdv, index) => {
-          tbody.innerHTML += `
-            <tr data-aos="fade-up" data-aos-delay="${index * 100}">
-              <td>${rdv.nom}</td>
-              <td>${rdv.date}</td>
-              <td>${rdv.heure}</td>
-              <td><button class="btn btn-annuler" onclick="annuler(${index})">Annuler</button></td>
-            </tr>
-          `;
-        });
-      }
-      function annuler(index) {
-        if (confirm("Voulez-vous vraiment annuler ce rendez-vous ?")) {
-          rendezvous.splice(index, 1);
-          afficherRendezvous();
-        }
-      }
-  
-      afficherRendezvous();
-    </script>
-  
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      AOS.init();
-    </script>
-    
 
     <!-- Enhanced Footer -->
     <footer class="bg-light text-center text-lg-start">
@@ -403,10 +371,9 @@
               <img src="images/instagram.png" alt="Instagram" width="40" class="m-2">
             </a>
             <a href="#" class="mr-3">
-              <img src="images/linkden.png" alt="linkden" width="40" class="m-2">
+              <img src="images/linkden.png" alt="LinkedIn" width="40" class="m-2">
             </a>
           </div>
-
         </div>
       </div>
 
@@ -415,7 +382,12 @@
       </div>
     </footer>
 
-    <!-- Animation Script - Updated for smaller navbar -->
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Animation Script -->
     <script>
       // Navbar scroll effect
       window.addEventListener('scroll', function() {
@@ -446,12 +418,12 @@
         window.addEventListener('scroll', fadeInOnScroll);
         // Initialize on page load
         fadeInOnScroll();
+        
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+          $('.alert').alert('close');
+        }, 5000);
       });
     </script>
 </body>
 </html>
-
-
-
-
-

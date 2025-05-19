@@ -1,7 +1,5 @@
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,7 +72,8 @@
         width: 100%;
       }
 
-      .login-btn {
+      /* Styles pour les boutons Profil et Se déconnecter */
+      .login-btn, .logout-btn {
         background-color: rgb(21, 194, 159);
         color: white !important;
         border-radius: 30px;
@@ -90,49 +89,72 @@
         box-shadow: 0 4px 12px rgba(21, 194, 159, 0.3);
       }
 
-      .login-btn img {
-        transition: transform 0.3s ease;
+      .logout-btn {
+        background-color: #f44336;
       }
 
-      .login-btn:hover img {
-        transform: rotate(15deg);
+      .logout-btn:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
       }
-      .navbar:hover {
-        color: rgb(9, 163, 112);
-      }
-      .shadow-custom {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .btn-annuler {
-        background-color: rgb(255, 87, 87);
-        border: none;
-        border-radius: 30px;
-        color: white;
-        padding: 6px 15px;
-      }
-      .btn-annuler:hover {
-        background-color: rgb(220, 53, 69);
-      }
-      .table thead {
-        background-color: rgb(21,194,159);
-        color: white;
-      }
-      .btn-retour {
-        border-radius: 50px;
-        background-color: rgb(21,194,159);
-        color: white;
-        border: none;
-        padding: 8px 20px;
-      }
-      .btn-retour:hover {
-        background-color: rgb(17, 160, 130);
-      }
-      body {
-        padding-top: 80px; /* Ajuste selon la hauteur de ta navbar */
-      }
-      
 
-    
+      /* Style responsive pour les boutons */
+      @media (max-width: 768px) {
+        .login-btn, .logout-btn {
+          margin-bottom: 8px;
+          margin-left: 0;
+        }
+      }
+
+      /* Updated Header and Welcome Image */
+      header {
+        position: relative;
+        overflow: hidden;
+        height: 70vh;
+        margin-top: 60px; /* Reduced from 80px to match the smaller navbar */
+      }
+
+      header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.85);
+        transition: transform 5s ease;
+      }
+
+      header:hover img {
+        transform: scale(1.05);
+      }
+
+      .header-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+      }
+
+      .textimg {
+        color: white;
+        font-size: 45px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        font-weight: 300;
+        margin-bottom: 20px;
+      }
+
+      .nomproj {
+        font-size: 70px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+        color: rgb(236, 236, 236);
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
 
       @keyframes glow {
         0% {
@@ -145,6 +167,87 @@
           text-shadow: 0 0 10px rgba(21, 194, 159, 0.5);
         }
       }
+
+      .nomproj {
+        animation: glow 2s infinite;
+      }
+
+      /* Services Section */
+      .text {
+        font-size: 40px;
+        margin: 50px 0 30px;
+        color: #333;
+        text-align: center;
+        position: relative;
+        font-weight: 600;
+      }
+
+      .text::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 4px;
+        background-color: rgb(21, 194, 159);
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .aboutimg {
+        width: 350px;
+        height: 350px;
+        margin: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        object-fit: cover;
+      }
+
+      .aboutimg:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .service-box {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        padding: 30px 20px;
+      }
+
+      .service-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .service-box h3 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      .service-box h3::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 3px;
+        background-color: rgb(21, 194, 159);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .service-box p {
+        color: #666;
+        margin-bottom: 25px;
+        line-height: 1.7;
+      }
+
       .btn1 {
         border-radius: 30px;
         background-color: rgb(21, 194, 159);
@@ -266,45 +369,11 @@
           display: block;
         }
       }
-      .profile-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        margin-top: 50px;
-      }
-  
-      .profile-title {
-        color: rgb(21, 194, 159);
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-  
-      .profile-info label {
-        font-weight: bold;
-      }
-  
-      .btn1 {
-        border-radius: 60px;
-        background-color: rgb(21, 194, 159);
-        border-color: transparent;
-        color: white;
-        padding: 10px 30px;
-      }
-  
-      .btn1:hover {
-        background-color: rgb(17, 173, 140);
-      }
-      .shadow-custom {
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
     </style>
 
 </head>
 <body>
    
-    <!-- Navbar -->
     <!-- Navbar avec boutons Profil et Se déconnecter -->
     <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
       <div class="container">
@@ -331,49 +400,78 @@
           <!-- Liens à droite -->
           <ul class="navbar-nav">
             <li class="nav-item mr-2">
-              <a class="nav-link font-weight-bold login-btn" href="profile.html">Profil <i class="fas fa-user-circle"></i></a>
+              <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold logout-btn" href="login.html">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
         </div>
       </div>
     </nav>
-<!--        
-    CONTENU  -->
-    
+       
+    <!-- Header with improved welcome image -->
+    <header>
+      <img src="images/Doctors-pana.png" alt="Medical team with heart icon" class="animate_animated animatefadeIn animate_slower">
+      <div class="header-content">
+        <p class="textimg text-center animate_animated animatefadeInDown animate_delay-1s">Bienvenue dans</p>
+        <div class="nomproj text-center animate_animated animatefadeInUp animate_delay-1s">DigitalRDV</div>
+      </div>
+    </header>
 
-   
-     
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-8 profile-card">
-            <div class="profile-title">Mon Profil</div>
-            <div class="profile-info">
-              <div class="form-group">
-                <label>Nom complet :</label>
-                <p>Hayrana El Fassi</p>
+    <!-- Services section with the other three images -->
+    <div class="container">
+      <p class="text fade-in">Nos services</p>
+      <div class="row justify-content-center">
+        <div class="col-md-4 text-center fade-in">
+          <img class="aboutimg" src="images/Doctors-rafiki.png" alt="Medical professionals">
+        </div>
+        <div class="col-md-4 text-center fade-in">
+          <img class="aboutimg" src="images/Online Doctor-amico.png" alt="Online medical chat">
+        </div>
+        <div class="col-md-4 text-center fade-in">
+          <img class="aboutimg" src="images/Service 24_7-amico.png" alt="24/7 medical service">
+        </div>
+      </div>
+    </div>
+
+    <!-- Services description with hover effects -->
+    <section class="container my-5">
+      <div class="row text-center">
+         
+          <div class="col-md-4 mb-4 fade-in">
+            <div class="service-box">
+              <div class="service-icon mb-3">
+                <i class="fas fa-calendar-check fa-3x" style="color: rgb(21, 194, 159);"></i>
               </div>
-              <div class="form-group">
-                <label>Email :</label>
-                <p>hayrana@email.com</p>
-              </div>
-              <div class="form-group">
-                <label>Téléphone :</label>
-                <p>+212 6 00 00 00 00</p>
-              </div>
-              <div class="form-group">
-                <label>Adresse :</label>
-                <p>Rabat, Maroc</p>
-              </div>
-              <a href="modifier-profil.html" class="btn btn1 mt-3">Modifier mes informations</a>
+              <h3>Prendre rendez-vous</h3>
+              <p>Réservez facilement vos consultations médicales en ligne en quelques clics. Choisissez le médecin, la spécialité et l'horaire qui vous conviennent le mieux, sans file d'attente ni déplacement inutile.</p>
+              <a href="rendezvous.html"><button class="btn1">Prendre RDV</button></a>
             </div>
+          </div>
+        <div class="col-md-4 mb-4 fade-in">
+          <div class="service-box">
+            <div class="service-icon mb-3">
+              <i class="fas fa-comments fa-3x" style="color: rgb(21, 194, 159);"></i>
+            </div>
+            <h3>Chat avec les médecins</h3>
+            <p>Bénéficiez d'une communication directe et sécurisée avec nos médecins. Posez vos questions, obtenez des conseils médicaux ou des suivis sans avoir à vous déplacer.</p>
+            <a href="chat.html"><button class="btn1">Chat</button></a>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4 fade-in">
+          <div class="service-box">
+            <div class="service-icon mb-3">
+              <i class="fas fa-clock fa-3x" style="color: rgb(21, 194, 159);"></i>
+            </div>
+            <h3>Services disponibles 24/7</h3>
+            <p>Parce que votre santé n'attend pas, notre service est accessible 24 heures sur 24 et 7 jours sur 7. Prenez rendez-vous à tout moment, même les week-ends et jours fériés.</p>
+            <a href="rendezvous.html"><button class="btn1">Prendre RDV</button></a>
           </div>
         </div>
       </div>
-    
+    </section>
 
     <!-- Enhanced Footer -->
     <footer class="bg-light text-center text-lg-start">
@@ -403,7 +501,7 @@
               <img src="images/instagram.png" alt="Instagram" width="40" class="m-2">
             </a>
             <a href="#" class="mr-3">
-              <img src="images/linkden.png" alt="linkden" width="40" class="m-2">
+              <img src="images/linkden.png" alt="LinkedIn" width="40" class="m-2">
             </a>
           </div>
 
