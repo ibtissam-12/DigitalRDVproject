@@ -399,10 +399,10 @@ if (!isset($_SESSION['user'])) {
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.html">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="mes-rendez-vous.html">Mes rendez-vous</a>
+              <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
             </li>
           </ul>
     

@@ -178,7 +178,15 @@ if (!isset($_SESSION['user'])) {
         }
     </style>
 </head>
+   <form id="rdv-form" action="../controller/rdvController.php" method="post" style="display:none;">
+    <input type="hidden" name="nom" id="form-nom">
+    <input type="hidden" name="email" id="form-email">
+    <input type="hidden" name="telephone" id="form-telephone">
+    <input type="hidden" name="date" id="form-date">
+    <input type="hidden" name="heure" id="form-heure">
+</form>
 <body>
+ 
     <div class="container">
         <h1>Prendre un rendez-vous</h1>
         
@@ -388,15 +396,22 @@ if (!isset($_SESSION['user'])) {
             // Actions spécifiques à chaque étape
             if (currentStep === 2) {
                 generateCalendar();
-            } else if (currentStep === 4) {
-                // Remplir les détails de confirmation
-                document.getElementById('confirm-name').textContent = document.getElementById('name').value;
-                document.getElementById('confirm-email').textContent = document.getElementById('email').value;
-                document.getElementById('confirm-phone').textContent = document.getElementById('phone').value;
-                document.getElementById('confirm-date').textContent = selectedDate;
-                document.getElementById('confirm-time').textContent = selectedTime;
-            }
-        }
+         if (currentStep === 4) {
+    // Remplir les détails de confirmation
+    document.getElementById('confirm-name').textContent = document.getElementById('name').value;
+    document.getElementById('confirm-email').textContent = document.getElementById('email').value;
+    document.getElementById('confirm-phone').textContent = document.getElementById('phone').value;
+    document.getElementById('confirm-date').textContent = selectedDate;
+    document.getElementById('confirm-time').textContent = selectedTime;
+
+    // Remplir et soumettre le formulaire caché
+    document.getElementById('form-nom').value = document.getElementById('name').value;
+    document.getElementById('form-email').value = document.getElementById('email').value;
+    document.getElementById('form-telephone').value = document.getElementById('phone').value;
+    document.getElementById('form-date').value = selectedDate;
+    document.getElementById('form-heure').value = selectedTime;
+    document.getElementById('rdv-form').submit();
+}
         
         // Fonction pour revenir à l'étape précédente
         function prevStep() {
