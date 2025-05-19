@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
@@ -403,7 +412,7 @@
               <a class="nav-link font-weight-bold login-btn" href="profile.html">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link font-weight-bold logout-btn" href="login.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
+             <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
             </li>
           </ul>
     
@@ -455,9 +464,11 @@
             <div class="service-icon mb-3">
               <i class="fas fa-comments fa-3x" style="color: rgb(21, 194, 159);"></i>
             </div>
-            <h3>Chat avec les médecins</h3>
-            <p>Bénéficiez d'une communication directe et sécurisée avec nos médecins. Posez vos questions, obtenez des conseils médicaux ou des suivis sans avoir à vous déplacer.</p>
-            <a href="chat.html"><button class="btn1">Chat</button></a>
+          
+            <h3>Mes rendez-vous</h3>
+<p>Consultez et gérez facilement vos rendez-vous médicaux. Accédez à l’historique, modifiez ou annulez vos rendez-vous, le tout en ligne et en toute sécurité.</p>
+
+            <a href="mes-rendez-vous.php"><button class="btn1">Mes rendez-vous</button></a>
           </div>
         </div>
         <div class="col-md-4 mb-4 fade-in">

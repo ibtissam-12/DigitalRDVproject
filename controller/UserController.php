@@ -50,56 +50,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Connexion via Google (exemple simple)
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
+//     $json = file_get_contents('php://input');
+//     $data = json_decode($json, true);
 
-    if (isset($data['credential'])) {
-        $googleToken = $data['credential'];
+//     if (isset($data['credential'])) {
+//         $googleToken = $data['credential'];
 
-        // À implémenter dans User.php : méthode loginWithGoogle()
-        $result = $user->loginWithGoogle($googleToken);
+//         // À implémenter dans User.php : méthode loginWithGoogle()
+//         $result = $user->loginWithGoogle($googleToken);
 
-        if ($result) {
-            $_SESSION['user'] = $result;
-            echo json_encode([
-                'success' => true,
-                'redirect' => '../views/accueil.php'
-            ]);
-        } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Erreur lors de la connexion Google.'
-            ]);
-        }
+//         if ($result) {
+//             $_SESSION['user'] = $result;
+//             echo json_encode([
+//                 'success' => true,
+//                 'redirect' => '../views/accueil.php'
+//             ]);
+//         } else {
+//             echo json_encode([
+//                 'success' => false,
+//                 'message' => 'Erreur lors de la connexion Google.'
+//             ]);
+//         }
+//         exit;
+//     }
+// }
+if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
+    $email = $_POST['email'] ?? '';
+    $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
+    $confirmer = $_POST['confirmer'] ?? '';
+
+    if ($nouveau_mdp !== $confirmer) {
+        $error = urlencode("Les mots de passe ne correspondent pas !");
+        header("Location: ../views/passwordReset.php?error=$error");
+        exit;
+    }
+
+    $result = $user->resetPassword($email, $nouveau_mdp);
+
+    if ($result === true) {
+        header('Location: ../views/passwordReset.php?success=1');
+        exit;
+    } else {
+        $error = urlencode($result);
+        header("Location: ../views/passwordReset.php?error=$error");
         exit;
     }
 }
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ...autres actions...
 
-    // Action de réinitialisation du mot de passe
-    if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
-        $email = $_POST['email'] ?? '';
+session_start();
+
+$user = new User();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Changement de mot de passe après vérification du code
+    if (isset($_POST['action']) && $_POST['action'] === 'change_password') {
+        $email = $_POST['email'] ?? ''; // ou $_SESSION['reset_email'] si tu utilises une session
         $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
         $confirmer = $_POST['confirmer'] ?? '';
 
+        if (empty($email) || empty($nouveau_mdp) || empty($confirmer)) {
+            header('Location: ../views/newPass.html?error=Champs manquants');
+            exit;
+        }
+
         if ($nouveau_mdp !== $confirmer) {
-            $error = urlencode("Les mots de passe ne correspondent pas !");
-            header("Location: ../views/passwordReset.html?error=$error");
+            header('Location: ../views/newPass.html?error=Les mots de passe ne correspondent pas');
             exit;
         }
 
         $result = $user->resetPassword($email, $nouveau_mdp);
 
         if ($result === true) {
-            header('Location: ../views/login.php?success=1');
+            header('Location: ../views/changeSucces.html');
             exit;
         } else {
-            $error = urlencode($result);
-            header("Location: ../views/passwordReset.html?error=$error");
+            header('Location: ../views/newPass.html?error=' . urlencode($result));
             exit;
         }
     }
+}
 }
 ?>
 

@@ -9,6 +9,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
     />
+    <!-- fevicon -->
+    <link rel="icon" href="images/logo.png" type="image/gif" />
     <style>
         html, body {
             height: 100%;
@@ -135,7 +137,7 @@
                 </span>
             </div>
             <div class="text-end w-100 mb-2">
-                <a href="passwordReset.html" class="text-danger text-decoration-none small">Mot de passe oublié ?</a>
+                <a href="passwordReset.php" class="text-danger text-decoration-none small">Mot de passe oublié ?</a>
             </div>
             <button type="submit" class="btn btn-success w-100 mt-2" name="action" id="submitBtn">
                 SE CONNECTER
@@ -149,7 +151,7 @@
 
         <!-- Google Sign-In Button -->
 
-        <div
+        <!-- <div
           id="g_id_onload"
           data-client_id="679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com"
           data-login_uri="http://localhost:8080/google-callback.php"
@@ -167,7 +169,8 @@
           data-logo_alignment="left"
           data-width="full"
           data-local_hint="fr"
-        ></div>
+        ></div> -->
+
         <!-- Sign Up Link -->
         <div class="signup-link">
             <a href="inscription.php" class="btn btn-outline-success w-100 mt-3"
@@ -248,25 +251,25 @@
             }
         }
 
-        function handleCredentialResponse(response) {
-            console.log("ID token Google :", response.credential);
+        // function handleCredentialResponse(response) {
+        //     console.log("ID token Google :", response.credential);
 
-            fetch("login-google.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ credential: response.credential }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.success) {
-                        window.location.href = data.redirect;
-                    } else {
-                        alert("Erreur lors de la connexion Google");
-                    }
-                });
-        }
+        //     fetch("login-google.php", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({ credential: response.credential }),
+        //     })
+        //         .then((res) => res.json())
+        //         .then((data) => {
+        //             if (data.success) {
+        //                 window.location.href = data.redirect;
+        //             } else {
+        //                 alert("Erreur lors de la connexion Google");
+        //             }
+        //         });
+        // }
     </script>
 </body>
 </html>

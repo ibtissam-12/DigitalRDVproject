@@ -60,6 +60,16 @@ class User {
         }
         return false;
     }
+    public function resetPassword($email, $nouveau_mdp) {
+    $hash = password_hash($nouveau_mdp, PASSWORD_DEFAULT);
+    $sql = "UPDATE utilisateurs SET mot_de_passe = ? WHERE email = ?";
+    $stmt = $this->conn->prepare($sql);
+    if ($stmt->execute([$hash, $email])) {
+        return true;
+    } else {
+        return "Erreur lors de la réinitialisation du mot de passe.";
+    }
+}
 }
 ?>
 

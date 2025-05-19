@@ -1,8 +1,18 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.png" type="image/gif" />
     <title>Mot de passe changé avec succès</title>
     <style>
         /* Reset and base styles */
@@ -115,7 +125,7 @@
         
         <h1 class="success-message">Mot de passe changé avec succès !</h1>
         
-        <a href="login.html" class="submit-btn">Suivant</a>
+        <a href="login.php" class="submit-btn">Suivant</a>
     </div>
 </body>
 </html>
