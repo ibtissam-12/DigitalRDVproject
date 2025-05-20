@@ -6,7 +6,7 @@
     <link rel="icon" href="images/logo.png" type="image/gif" />
     <title>Formulaire d'Inscription</title>
     <style>
-        /* Styles inchangés */
+        
         * {
             margin: 0;
             padding: 0;
@@ -144,12 +144,7 @@
         </form>
     </div>
 
-    <script>
-        // Optionnel : validation JS côté client
-        document.getElementById('registration-form').addEventListener('submit', function (event) {
-            // Pas de prévention de l'envoi ici, laisse le serveur gérer les erreurs côté backend
-        });
-    </script>
+    
 </body>
 </html>
 

@@ -149,27 +149,7 @@
             <hr class="flex-grow-1" /> <span class="mx-2">OU</span> <hr class="flex-grow-1" />
         </div>
 
-        <!-- Google Sign-In Button -->
-
-        <!-- <div
-          id="g_id_onload"
-          data-client_id="679790544294-0h193q32m4urv5acdo9hm3bju94q4qdt.apps.googleusercontent.com"
-          data-login_uri="http://localhost:8080/google-callback.php"
-          data-callback="handleCredentialResponse"
-          data-auto_prompt="false"
-        ></div>
-
-        <div
-          class="g_id_signin"
-          data-type="standard"
-          data-shape="rectangular"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
-          data-logo_alignment="left"
-          data-width="full"
-          data-local_hint="fr"
-        ></div> -->
+       
 
         <!-- Sign Up Link -->
         <div class="signup-link">
@@ -251,25 +231,7 @@
             }
         }
 
-        // function handleCredentialResponse(response) {
-        //     console.log("ID token Google :", response.credential);
-
-        //     fetch("login-google.php", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({ credential: response.credential }),
-        //     })
-        //         .then((res) => res.json())
-        //         .then((data) => {
-        //             if (data.success) {
-        //                 window.location.href = data.redirect;
-        //             } else {
-        //                 alert("Erreur lors de la connexion Google");
-        //             }
-        //         });
-        // }
+      
     </script>
 </body>
 </html>
