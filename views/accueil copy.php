@@ -1,7 +1,7 @@
 <!-- <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user'])) {
     header('Location: login.php');
     exit;
 }
@@ -398,9 +398,8 @@ if (!isset($_SESSION['user_id'])) {
             <li class="nav-item">
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
-            </li>
+           
+           
             <li class="nav-item">
               <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
             </li>
