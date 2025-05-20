@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 
 if (!isset($_SESSION['user'])) {
@@ -6,7 +6,7 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-?>
+?> -->
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
@@ -399,7 +399,7 @@ if (!isset($_SESSION['user'])) {
               <a class="nav-link ml-4" href="accueil.php">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link ml-4" href="rendezvous1.php">Prendre rendez-vous</a>
+              <a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a>
             </li>
             <li class="nav-item">
               <a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a>
@@ -409,7 +409,7 @@ if (!isset($_SESSION['user'])) {
           <!-- Liens à droite -->
           <ul class="navbar-nav">
             <li class="nav-item mr-2">
-              <a class="nav-link font-weight-bold login-btn" href="profil.html">Profil <i class="fas fa-user-circle"></i></a>
+              <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
             </li>
             <li class="nav-item">
              <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
