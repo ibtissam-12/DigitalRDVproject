@@ -28,8 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'], $_POST['mot_
         if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
             // Connexion réussie
             $_SESSION['user_id'] = $user['id'];
-            // Redirection pour éviter la résoumission du formulaire
-            header("Location: login.php");
+            $_SESSION['role'] = $user['role'];
+
+            // Redirection selon le rôle
+            if ($user['role'] === 'admin') {
+                header("Location: accueil-copy.php");
+            } else {
+                header("Location: accueil.php");
+            }
             exit;
         } else {
             $error_message = "Email ou mot de passe incorrect.";
