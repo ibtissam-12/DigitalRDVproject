@@ -183,7 +183,7 @@ try {
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link ml-4" href="accueil.php">Accueil</a></li>
         <li class="nav-item"><a class="nav-link ml-4" href="rendezvous.php">Prendre rendez-vous</a></li>
-        <li class="nav-item"><a class="nav-link ml-4" href="mes_rendezvous.php">Mes rendez-vous</a></li>
+        <li class="nav-item"><a class="nav-link ml-4" href="mes-rendez-vous.php">Mes rendez-vous</a></li>
       </ul>
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -231,7 +231,7 @@ try {
   </div>
 
   <div class="text-center mt-4">
-    <a href="rendezvous.html" class="btn btn-retour">Prendre un nouveau rendez-vous</a>
+    <a href="rendezvous.php" class="btn btn-retour">Prendre un nouveau rendez-vous</a>
   </div>
 </div>
 

@@ -730,6 +730,23 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
     </script>
+    <script>
+function prevStep() {
+    if (document.getElementById('step2').classList.contains('active')) {
+        // Retour à l'étape 1
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+    } else if (document.getElementById('step3').classList.contains('active')) {
+        // Retour à l'étape 2
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+    } else if (document.getElementById('step4').classList.contains('active')) {
+        // Retour à l'étape 3
+        document.getElementById('step4').classList.remove('active');
+        document.getElementById('step3').classList.add('active');
+    }
+}
+    </script>
 
 </body>
 </html>
