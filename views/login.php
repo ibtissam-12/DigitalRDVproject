@@ -429,7 +429,7 @@ if (isset($_SESSION['user_id'])) {
                 <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" placeholder="Entrez votre mot de passe" required>
               </div>
               <div class="forgot-password">
-                <a href="#">Mot de passe oublié ?</a>
+                <a href="passwordReset.php">Mot de passe oublié ?</a>
               </div>
             </div>
             <button type="submit" class="login-btn-submit">SE CONNECTER</button>

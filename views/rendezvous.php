@@ -1,4 +1,16 @@
 <?php
+if (isset($_POST['ajax']) && $_POST['ajax'] == '1' && isset($_POST['date'])) {
+    $pdo = new PDO('mysql:host=localhost;dbname=digitalrdv;charset=utf8', 'root', '');
+    $date = $_POST['date'];
+    $stmt = $pdo->prepare("SELECT heure FROM rendezvous WHERE date = ?");
+    $stmt->execute([$date]);
+    $reservedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    header('Content-Type: application/json');
+    echo json_encode($reservedSlots);
+    exit;
+}
+
+
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -69,8 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['email
         $stmt = $pdo->prepare("INSERT INTO rendezvous (utilisateur_id, nom, email, date, heure, statut) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$user_id, $name, $email, $date, $time, 'prévu']);
         $success = true;
-    } else {
-        $error = "Ce créneau est déjà réservé. Veuillez choisir un autre horaire.";
     }
 }
 
@@ -201,10 +211,11 @@ if (isset($_POST['date'])) {
             border-color: #00BFA5;
         }
         .time-slot.disabled {
-            background-color: #eee;
-            color: #aaa;
-            cursor: not-allowed;
-            pointer-events: none;
+            background-color: #eee !important;
+            color: #aaa !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            border-color: #ccc !important;
         }
         .buttons {
             display: flex;
@@ -568,6 +579,11 @@ function nextStep() {
         }
         document.getElementById('step2').classList.remove('active');
         document.getElementById('step3').classList.add('active');
+        // Recharge les créneaux réservés pour la date sélectionnée
+        fetchReservedSlots(window.selectedDate, function(slots) {
+            window.reservedSlots = slots;
+            renderTimeSlots();
+        });
         return;
     }
     // Étape 3 -> Étape 4 (confirmation)
@@ -670,7 +686,10 @@ function selectTimeSlot(el) {
     <script>
 function renderTimeSlots() {
     document.querySelectorAll('.time-slot').forEach(slot => {
-        if (window.reservedSlots && window.reservedSlots.includes(slot.textContent.trim())) {
+        // Normalise le format pour comparer "15:00" et "15:00:00"
+        const slotTime = slot.textContent.trim();
+        const slotTimeFull = slotTime.length === 5 ? slotTime + ':00' : slotTime;
+        if (window.reservedSlots && window.reservedSlots.includes(slotTimeFull)) {
             slot.classList.add('disabled');
             slot.onclick = null;
         } else {
@@ -701,16 +720,16 @@ function fetchReservedSlots(date, callback) {
     xhr.send('ajax=1&date=' + encodeURIComponent(date));
 }
     </script>
-<?php
-if (isset($_POST['ajax']) && $_POST['ajax'] == '1' && isset($_POST['date'])) {
-    $date = $_POST['date'];
-    $stmt = $pdo->prepare("SELECT heure FROM rendezvous WHERE date = ?");
-    $stmt->execute([$date]);
-    $reservedSlots = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    header('Content-Type: application/json');
-    echo json_encode($reservedSlots);
-    exit;
-}
-?>
+    <script>
+window.addEventListener('DOMContentLoaded', function() {
+    if (window.selectedDate) {
+        fetchReservedSlots(window.selectedDate, function(slots) {
+            window.reservedSlots = slots;
+            renderTimeSlots();
+        });
+    }
+});
+    </script>
+
 </body>
 </html>
