@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $user->register($nom, $prenom, $email, $mot_de_passe,$confirmer);
 
         if ($result === true) {
-            header('Location: ../views/registrationSucces.html');
+            header('Location: ../views/registrationSucces.php');
             exit;
         } else {
             $error = urlencode($result);
@@ -32,24 +32,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = $user->login($email, $mot_de_passe);
 
-        if ($result) {
-            $_SESSION['user'] = $result;
+       <?php
+if ($result) {
+    $_SESSION['user'] = $result;
 
-            // Envoi d'une réponse JSON avec redirection selon le rôle (si souhaité)
-            echo json_encode([
-                'success' => true,
-                'redirect' => '../views/accueil.php'
-            ]);
-        } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Email ou mot de passe incorrect.'
-            ]);
-        }
-        exit;
+    // Redirection selon le rôle
+    if (isset($result['role']) && $result['role'] === 'admin') {
+        $redirect = '../views/accueil copy.php';
+    } else {
+        $redirect = '../views/accueil.php';
     }
 
-   
+    echo json_encode([
+        'success' => true,
+        'redirect' => $redirect
+    ]);
+} else {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Email ou mot de passe incorrect.'
+    ]);
+}
+exit;
+    }
+
+    // Connexion via Google (exemple simple)
+//     $json = file_get_contents('php://input');
+//     $data = json_decode($json, true);
+
+//     if (isset($data['credential'])) {
+//         $googleToken = $data['credential'];
+
+//         // À implémenter dans User.php : méthode loginWithGoogle()
+//         $result = $user->loginWithGoogle($googleToken);
+
+//         if ($result) {
+//             $_SESSION['user'] = $result;
+//             echo json_encode([
+//                 'success' => true,
+//                 'redirect' => '../views/accueil.php'
+//             ]);
+//         } else {
+//             echo json_encode([
+//                 'success' => false,
+//                 'message' => 'Erreur lors de la connexion Google.'
+//             ]);
+//         }
+//         exit;
+//     }
+// }
 if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
     $email = $_POST['email'] ?? '';
     $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
@@ -73,9 +104,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
     }
 }
 
+session_start();
 
+$user = new User();
 
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Changement de mot de passe après vérification du code
     if (isset($_POST['action']) && $_POST['action'] === 'change_password') {
         $email = $_POST['email'] ?? ''; // ou $_SESSION['reset_email'] si tu utilises une session
@@ -83,12 +116,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
         $confirmer = $_POST['confirmer'] ?? '';
 
         if (empty($email) || empty($nouveau_mdp) || empty($confirmer)) {
-            header('Location: ../views/newPass.html?error=Champs manquants');
+            header('Location: ../views/newPass.php?error=Champs manquants');
             exit;
         }
 
         if ($nouveau_mdp !== $confirmer) {
-            header('Location: ../views/newPass.html?error=Les mots de passe ne correspondent pas');
+            header('Location: ../views/newPass.php?error=Les mots de passe ne correspondent pas');
             exit;
         }
 
@@ -98,12 +131,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
             header('Location: ../views/changeSucces.html');
             exit;
         } else {
-            header('Location: ../views/newPass.html?error=' . urlencode($result));
+            header('Location: ../views/newPass.php?error=' . urlencode($result));
             exit;
         }
     }
 }
-
+}
 ?>
 
 
