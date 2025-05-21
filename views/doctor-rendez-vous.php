@@ -107,7 +107,7 @@ try {
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item mr-2">
-                        <a class="nav-link font-weight-bold login-btn" href="profile.php">Profil <i class="fas fa-user-circle"></i></a>
+                        <a class="nav-link font-weight-bold login-btn" href="doctor-profil.php">Profil <i class="fas fa-user-circle"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link font-weight-bold logout-btn" href="logout.php">Se déconnecter <i class="fas fa-sign-out-alt"></i></a>
