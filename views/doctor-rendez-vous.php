@@ -101,6 +101,9 @@ try {
             <a href="#" class="navbar-brand"><img src="images/logo.png" alt="" width="40"></a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
+                      <li class="nav-item">
+                        <a class="nav-link ml-4" href="accueil-copy.php">Accueil</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link ml-4" href="doctor-rendez-vous.php">Tous les rendez-vous</a>
                     </li>
@@ -178,5 +181,78 @@ try {
             </div>
         </div>
     </div>
+
+ <footer class="bg-light text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          
+          <!-- Contactez-nous -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0 fade-in">
+            <h5>Contactez-nous</h5>
+            <p>
+              Vous avez des questions ? N'hésitez pas à nous contacter pour toute assistance ou information supplémentaire.
+            </p>
+            <div class="mt-4">
+              <i class="fas fa-phone-alt mr-2" style="color: rgb(21, 194, 159);"></i> +33 1 23 45 67 89<br>
+              <i class="fas fa-envelope mr-2 mt-2" style="color: rgb(21, 194, 159);"></i> contact@digitalrdv.com
+            </div>
+          </div>
+
+          <!-- Réseaux sociaux -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0 fade-in">
+            <h5>Suivez-nous</h5>
+            <p>Restez connectés avec nous sur les réseaux sociaux pour les dernières nouvelles et mises à jour.</p>
+            <a href="#" class="mr-3">
+              <img src="images/facebook.png" alt="Facebook" width="40" class="m-2">
+            </a>
+            <a href="#" class="mr-3">
+              <img src="images/instagram.png" alt="Instagram" width="40" class="m-2">
+            </a>
+            <a href="#" class="mr-3">
+              <img src="images/linkden.png" alt="LinkedIn" width="40" class="m-2">
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-center p-3 copyright">
+        © 2025 DigitalRDV - Tous droits réservés
+      </div>
+    </footer>
+
+    <!-- Animation Script - Updated for smaller navbar -->
+    <script>
+      // Navbar scroll effect
+      window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.style.padding = '5px 0';
+          navbar.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        } else {
+          navbar.style.padding = '8px 0';
+          navbar.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+        }
+      });
+      
+      // Fade-in animation on scroll
+      document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = function() {
+          for (let i = 0; i < fadeElements.length; i++) {
+            const elem = fadeElements[i];
+            const distInView = elem.getBoundingClientRect().top - window.innerHeight + 100;
+            if (distInView < 0) {
+              elem.classList.add('active');
+            }
+          }
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        // Initialize on page load
+        fadeInOnScroll();
+      });
+    </script>
 </body>
 </html>

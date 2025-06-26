@@ -103,6 +103,9 @@ try {
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
+                        <a class="nav-link ml-4" href="accueil-copy.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link ml-4" href="doctor-rendez-vous.php">Tous les rendez-vous</a>
                     </li>
                 </ul>

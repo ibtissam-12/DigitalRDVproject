@@ -122,15 +122,15 @@
             <input type="hidden" name="action" value="register" />
             <div class="form-group">
                 <label for="nom" class="form-label">NOM</label>
-                <input type="text" id="nom" name="nom" class="form-input" placeholder="Entrez votre nom" required />
+                <input type="text" id="nom" name="nom" class="form-input" placeholder="Entrez votre nom" value="<?php echo isset($_GET['nom']) ? htmlspecialchars($_GET['nom']) : ''; ?>" required />
             </div>
             <div class="form-group">
                 <label for="prenom" class="form-label">PRÉNOM</label>
-                <input type="text" id="prenom" name="prenom" class="form-input" placeholder="Entrez votre prénom" required />
+                <input type="text" id="prenom" name="prenom" class="form-input" placeholder="Entrez votre prénom" value="<?php echo isset($_GET['prenom']) ? htmlspecialchars($_GET['prenom']) : ''; ?>" required />
             </div>
             <div class="form-group">
                 <label for="email" class="form-label">EMAIL</label>
-                <input type="email" id="email" name="email" class="form-input" placeholder="Entrez votre Email" required />
+                <input type="email" id="email" name="email" class="form-input" placeholder="Entrez votre Email" value="<?php echo isset($_GET['email']) ? htmlspecialchars($_GET['email']) : ''; ?>" required />
             </div>
             <div class="form-group">
                 <label for="password" class="form-label">MOT DE PASSE</label>

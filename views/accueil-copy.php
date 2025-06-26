@@ -391,7 +391,11 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
 
         <div class="collapse navbar-collapse" id="navbarNav">
           <!-- Liens à gauche -->
+
           <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link ml-4" href="accueil-copy.php">Accueil </a>
+            </li>
             <li class="nav-item">
               <a class="nav-link ml-4" href="doctor-rendez-vous.php">liste des rendez-vous </a>
             </li>
@@ -444,9 +448,9 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
               <div class="service-icon mb-3">
                 <i class="fas fa-calendar-check fa-3x" style="color: rgb(21, 194, 159);"></i>
               </div>
-              <h3>Prendre rendez-vous</h3>
-              <p>Réservez facilement vos consultations médicales en ligne en quelques clics. Choisissez le médecin, la spécialité et l'horaire qui vous conviennent le mieux, sans file d'attente ni déplacement inutile.</p>
-              <a href="rendezvous1.php"><button class="btn1">Prendre RDV</button></a>
+                  <h3>Consulter les rendez-vous</h3>
+    <p>Accédez à la liste complète des rendez-vous enregistrés. Filtrez par date, médecin ou patient pour un suivi optimal.</p>
+    <a href="admin-consult-rdv.php"><button class="btn1">Voir les rendez-vous</button></a>
             </div>
           </div>
         <div class="col-md-4 mb-4 fade-in">

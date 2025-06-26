@@ -19,8 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../views/registrationSucces.php');
             exit;
         } else {
+            // Si erreur, on renvoie les champs dans l'URL
             $error = urlencode($result);
-            header("Location: ../views/inscription.php?error=$error");
+            $nom = urlencode($nom);
+            $prenom = urlencode($prenom);
+            $email = urlencode($email);
+            header("Location: ../views/inscription.php?error=$error&nom=$nom&prenom=$prenom&email=$email");
             exit;
         }
     }
@@ -48,32 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
-
-    // Connexion via Google (exemple simple)
-//     $json = file_get_contents('php://input');
-//     $data = json_decode($json, true);
-
-//     if (isset($data['credential'])) {
-//         $googleToken = $data['credential'];
-
-//         // À implémenter dans User.php : méthode loginWithGoogle()
-//         $result = $user->loginWithGoogle($googleToken);
-
-//         if ($result) {
-//             $_SESSION['user'] = $result;
-//             echo json_encode([
-//                 'success' => true,
-//                 'redirect' => '../views/accueil.php'
-//             ]);
-//         } else {
-//             echo json_encode([
-//                 'success' => false,
-//                 'message' => 'Erreur lors de la connexion Google.'
-//             ]);
-//         }
-//         exit;
-//     }
-// }
 if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
     $email = $_POST['email'] ?? '';
     $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
